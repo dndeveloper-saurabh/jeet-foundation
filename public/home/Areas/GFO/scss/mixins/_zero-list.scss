@@ -1,0 +1,6 @@
+// zero out list-style-type NOTE: Becareful with nested list styles
+@mixin zero-list() {
+  margin: 0;
+  padding-left: 0;
+  list-style-type: none;
+}

@@ -1,0 +1,191 @@
+@import "../_fonts";
+@import "../_breakpoints";
+
+/* stylelint-disable function-calc-no-invalid */
+// ****
+// using ems in the calc instead of pixels to output the desire unit less values
+// ****
+
+@mixin txt-heading() {
+  min-height: 0;
+
+  font-family: $font-secondary;
+  font-weight: 500;
+}
+
+@mixin txt-super() {
+  @include txt-heading;
+  font-family: $font-display;
+
+  font-size: clamp(62px, calc(9.5vw + 1rem), 108px);
+  font-weight: 500;
+  line-height: 1.2;
+}
+
+@mixin txt-hero() {
+  @include txt-heading;
+  font-size: clamp(32px, calc(3.7vw + 1rem), 54px);
+  line-height: calc(var(--txt-hero-line-height) / 32);
+
+  @media ($bp-small-min) {
+    line-height: calc(var(--txt-hero-line-height) / 54);
+  }
+}
+
+@mixin txt-h1() {
+  @include txt-heading;
+  font-size: clamp(28px, calc(2.2vw + 1rem), 36px);
+  line-height: calc(var(--txt-h1-line-height) / 28);
+
+  @media ($bp-small-min) {
+    line-height: calc(var(--txt-h1-line-height) / 36);
+  }
+}
+
+@mixin txt-h2() {
+  @include txt-heading;
+  font-size: clamp(24px, calc(1.5vw + 1rem), 32px);
+  line-height: calc(var(--txt-h2-line-height) / 24);
+
+  @media ($bp-small-min) {
+    line-height: calc(var(--txt-h2-line-height) / 32);
+  }
+}
+
+@mixin txt-h3() {
+  @include txt-heading;
+  font-size: 21px;
+  line-height: calc(var(--txt-h3-line-height) / 21);
+
+  @media ($bp-small-min) {
+    font-size: 24px;
+    line-height: calc(var(--txt-h3-line-height) / 24);
+  }
+}
+
+@mixin txt-h4() {
+  @include txt-heading;
+  font-size: 18px;
+  line-height: calc(var(--txt-h4-line-height) / 18);
+
+  @media ($bp-small-min) {
+    font-size: 21px;
+    line-height: calc(var(--txt-h4-line-height) / 21);
+  }
+}
+
+@mixin txt-h5() {
+  @include txt-heading;
+  font-size: 16px;
+  line-height: calc(var(--txt-h5-line-height) / 16);
+
+  @media ($bp-small-min) {
+    font-size: 18px;
+    line-height: calc(var(--txt-h5-line-height) / 18);
+  }
+}
+
+@mixin txt-h6() {
+  font-family: $font-primary;
+  font-size: 16px;
+  font-weight: 500;
+  line-height: 1.5;
+}
+
+@mixin txt-body() {
+  font-family: $font-primary;
+  font-size: 16px;
+  font-weight: 300;
+  line-height: 1.5;
+}
+
+@mixin txt-small() {
+  font-size: 16px;
+  line-height: 1.5;
+}
+
+// *** only use sparingly ***
+@mixin txt-x-small() {
+  font-size: 12px;
+  font-weight: 400;
+  line-height: calc(20 / 12);
+}
+
+@mixin txt-caption() {
+  max-width: 670px;
+
+  color: var(--c-gray-text-on-light);
+  font-size: 16px;
+  line-height: 1.5;
+
+  a {
+    text-decoration: underline;
+  }
+
+  .container--dark & {
+    color: var(--c-gray-text-on-dark);
+  }
+}
+
+@mixin txt-label {
+  @include txt-h6;
+}
+
+@mixin txt-bio {
+  color: var(--c-gray-text-on-light);
+  font-size: 16px;
+  line-height: 1.5;
+
+  .container--dark & {
+    color: var(--c-gray-text-on-dark);
+  }
+}
+
+@mixin txt-pull-quote {
+  @include txt-heading;
+  color: var(--c-gray-text-on-light);
+
+  font-size: clamp(24px, calc(1.3vw + 1rem), 32px);
+  font-style: italic;
+  line-height: 1.375;
+
+  mark {
+    color: var(--c-text-base);
+    background-color: transparent;
+  }
+
+  .container--dark & {
+    color: var(--c-white);
+
+    mark {
+      color: var(--c-gray-text-on-dark);
+    }
+  }
+}
+
+@mixin animatedLinkUnderline {
+  text-decoration: none;
+  background-image: linear-gradient(currentcolor, currentcolor);
+
+  // aligning background to right allows for a "reverse" expanding underline
+  // on mouseout. setting left on hover "starts" from the correct side
+  background-position: right bottom;
+  background-repeat: no-repeat;
+  background-size: 100% 1px;
+  transition: background-size 300ms;
+
+  &:hover {
+    background-position: left bottom;
+    animation: 500ms animLinkHover ease;
+  }
+}
+
+@keyframes animLinkHover {
+  0% {
+    background-size: 0% 1px;
+  }
+
+  100% {
+    background-size: 100% 1px;
+  }
+}
