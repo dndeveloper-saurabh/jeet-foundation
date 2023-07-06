@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect, useRef, useState} from 'react';
 
 import gkhero from '../assets/-/media/gfo/5ideas_articles/articles/20230607-goalkeepers-six-picks-thulile-khanyile/gkhero.jpg';
 import spriteSVG from '../assets/Areas/GFO/assets/img/svg-sprite.svg';
@@ -12,11 +12,33 @@ import OurRole from '../assets/-/media/gfo/2home/our-role.png';
 import HowWeWork from '../assets/-/media/gfo/2home/how-we-work.png';
 import OurStory from '../assets/-/media/gfo/2home/our-story.png';
 import LogoLG from '../assets/-/media/logos/logolg.svg';
+import {useMediaQuery} from "react-responsive";
 
 export default function Header() {
+  const [showSearchBox, setShowSearchBox] = useState(false);
+  const [showMobileNav, setShowMobileNav] = useState(false);
+  const [activeNav, setActiveNav] = useState(null);
+  const navRef = useRef(null);
+  const searchRef = useRef(null);
+  const isSmallScreen = useMediaQuery({ query: "(max-width: 500px)" });
+
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (navRef.current && !navRef.current.contains(event.target)) {
+        setActiveNav(null);
+      }
+      if (searchRef.current && !searchRef.current.contains(event.target)) {
+        setShowSearchBox(null);
+      }
+    };
+    document.addEventListener('click', handleClickOutside, true);
+    return () => {
+      document.removeEventListener('click', handleClickOutside, true);
+    };
+  }, [])
 
   return (
-    <header>
+    <header ref={navRef}>
       <div className="js-old-browser-modal modal-container">
         <div className="modal js-modal old-browser-modal__modal" id="old-browser-modal">
           <div className="modal__box-holder">
@@ -49,26 +71,31 @@ export default function Header() {
         </div>
       </div>
       <section className="site-header js-site-header__mount" data-model="{&quot;skipNavigation&quot;:{&quot;href&quot;:&quot;#main-content&quot;,&quot;text&quot;:&quot;Skip to main content&quot;,&quot;title&quot;:null,&quot;type&quot;:null,&quot;lang&quot;:null},&quot;logo&quot;:{&quot;title&quot;:&quot;Bill & Melinda Gates Foundation&quot;,&quot;logoSm&quot;:&quot;./-/media/logos/logolg.svg&quot;,&quot;logoLg&quot;:&quot;./-/media/logos/logolg.svg&quot;},&quot;theme&quot;:&quot;base&quot;,&quot;siteName&quot;:null,&quot;sticky&quot;:false,&quot;primaryNav&quot;:[{&quot;title&quot;:&quot;About us&quot;,&quot;subtitle&quot;:&quot;Learn about our origins, how we work, committed grants, careers, and our role in fighting inequities.&quot;,&quot;link&quot;:{&quot;href&quot;:&quot;/about&quot;,&quot;text&quot;:&quot;Learn more about us&quot;,&quot;title&quot;:null,&quot;type&quot;:null,&quot;lang&quot;:&quot;en&quot;},&quot;submenu&quot;:[{&quot;header&quot;:&quot;&quot;,&quot;numberOfColumns&quot;:1,&quot;link&quot;:{&quot;href&quot;:&quot;&quot;,&quot;text&quot;:&quot;&quot;,&quot;title&quot;:&quot;&quot;,&quot;type&quot;:&quot;internal&quot;,&quot;lang&quot;:&quot;en&quot;},&quot;links&quot;:[{&quot;href&quot;:&quot;/about/our-story&quot;,&quot;text&quot;:&quot;Our story&quot;,&quot;title&quot;:&quot;&quot;,&quot;type&quot;:&quot;internal&quot;,&quot;lang&quot;:&quot;en&quot;},{&quot;href&quot;:&quot;/about/our-role&quot;,&quot;text&quot;:&quot;Our role&quot;,&quot;title&quot;:&quot;&quot;,&quot;type&quot;:&quot;internal&quot;,&quot;lang&quot;:&quot;en&quot;},{&quot;href&quot;:&quot;/about/foundation-faq&quot;,&quot;text&quot;:&quot;Foundation FAQ&quot;,&quot;title&quot;:&quot;&quot;,&quot;type&quot;:&quot;internal&quot;,&quot;lang&quot;:&quot;en&quot;},{&quot;href&quot;:&quot;/about/foundation-fact-sheet&quot;,&quot;text&quot;:&quot;Foundation Fact Sheet&quot;,&quot;title&quot;:&quot;&quot;,&quot;type&quot;:&quot;internal&quot;,&quot;lang&quot;:&quot;en&quot;},{&quot;href&quot;:&quot;/about/leadership&quot;,&quot;text&quot;:&quot;Leadership&quot;,&quot;title&quot;:&quot;&quot;,&quot;type&quot;:&quot;internal&quot;,&quot;lang&quot;:&quot;en&quot;},{&quot;href&quot;:&quot;/about/financials&quot;,&quot;text&quot;:&quot;Financials&quot;,&quot;title&quot;:&quot;&quot;,&quot;type&quot;:&quot;internal&quot;,&quot;lang&quot;:&quot;en&quot;},{&quot;href&quot;:&quot;/about/policies-and-resources&quot;,&quot;text&quot;:&quot;Policies and Resources&quot;,&quot;title&quot;:&quot;&quot;,&quot;type&quot;:&quot;internal&quot;,&quot;lang&quot;:&quot;en&quot;}]},{&quot;header&quot;:&quot;&quot;,&quot;numberOfColumns&quot;:1,&quot;link&quot;:{&quot;href&quot;:&quot;&quot;,&quot;text&quot;:&quot;&quot;,&quot;title&quot;:&quot;&quot;,&quot;type&quot;:&quot;internal&quot;,&quot;lang&quot;:&quot;en&quot;},&quot;links&quot;:[{&quot;href&quot;:&quot;/about/how-we-work&quot;,&quot;text&quot;:&quot;How we work&quot;,&quot;title&quot;:&quot;&quot;,&quot;type&quot;:&quot;internal&quot;,&quot;lang&quot;:&quot;en&quot;},{&quot;href&quot;:&quot;/about/committed-grants&quot;,&quot;text&quot;:&quot;Committed grants&quot;,&quot;title&quot;:&quot;&quot;,&quot;type&quot;:&quot;internal&quot;,&quot;lang&quot;:&quot;en&quot;},{&quot;href&quot;:&quot;/about/diversity-equity-inclusion&quot;,&quot;text&quot;:&quot;Diversity, equity, and inclusion&quot;,&quot;title&quot;:&quot;&quot;,&quot;type&quot;:&quot;internal&quot;,&quot;lang&quot;:&quot;en&quot;},{&quot;href&quot;:&quot;/about/careers&quot;,&quot;text&quot;:&quot;Careers&quot;,&quot;title&quot;:&quot;&quot;,&quot;type&quot;:&quot;internal&quot;,&quot;lang&quot;:&quot;en&quot;},{&quot;href&quot;:&quot;/about/supporting-our-work&quot;,&quot;text&quot;:&quot;Supporting our work&quot;,&quot;title&quot;:&quot;&quot;,&quot;type&quot;:&quot;internal&quot;,&quot;lang&quot;:&quot;en&quot;},{&quot;href&quot;:&quot;/about/offices&quot;,&quot;text&quot;:&quot;Offices&quot;,&quot;title&quot;:&quot;&quot;,&quot;type&quot;:&quot;internal&quot;,&quot;lang&quot;:&quot;en&quot;},{&quot;href&quot;:&quot;/about/contact&quot;,&quot;text&quot;:&quot;Contact&quot;,&quot;title&quot;:&quot;&quot;,&quot;type&quot;:&quot;internal&quot;,&quot;lang&quot;:&quot;en&quot;}]}],&quot;feature&quot;:{&quot;type&quot;:&quot;person&quot;,&quot;data&quot;:{&quot;header&quot;:&quot;Leader spotlight&quot;,&quot;name&quot;:&quot;Violaine  Mitchell&quot;,&quot;title&quot;:&quot;Director, Immunization&quot;,&quot;image&quot;:{&quot;srcSet&quot;:&quot;./-/media/gfo/3about/3people/ga11631184_violaine_mitchell_20190314_0001.jpg?w=100&hash=2AF29922088D8668B138D8441C111869 100w,./-/media/gfo/3about/3people/ga11631184_violaine_mitchell_20190314_0001.jpg?w=200&hash=3E45E06030BCAF697986686B2E39DFA2 200w,./-/media/gfo/3about/3people/ga11631184_violaine_mitchell_20190314_0001.jpg?w=3000&hash=5B91EDD647CAB3FE78B7AE0EF53B5A3C 3000w&quot;,&quot;alt&quot;:&quot;Violaine Mitchell&quot;,&quot;sizes&quot;:null,&quot;height&quot;:&quot;2400&quot;,&quot;width&quot;:&quot;3000&quot;},&quot;link&quot;:{&quot;href&quot;:&quot;/about/leadership/violaine-mitchell&quot;,&quot;text&quot;:&quot;Violaine  Mitchell&quot;,&quot;title&quot;:&quot;Violaine  Mitchell&quot;,&quot;type&quot;:&quot;internal&quot;,&quot;lang&quot;:null}}}},{&quot;title&quot;:&quot;Our work&quot;,&quot;subtitle&quot;:&quot;Learn how our seven divisions collaborate with partners in over 130 countries to address the issues we care about and drive change.&quot;,&quot;link&quot;:{&quot;href&quot;:&quot;/our-work&quot;,&quot;text&quot;:&quot;Explore our work&quot;,&quot;title&quot;:null,&quot;type&quot;:null,&quot;lang&quot;:&quot;en&quot;},&quot;submenu&quot;:[{&quot;header&quot;:&quot;Places&quot;,&quot;numberOfColumns&quot;:1,&quot;link&quot;:{&quot;href&quot;:&quot;&quot;,&quot;text&quot;:&quot;&quot;,&quot;title&quot;:&quot;&quot;,&quot;type&quot;:&quot;internal&quot;,&quot;lang&quot;:&quot;en&quot;},&quot;links&quot;:[{&quot;href&quot;:&quot;/our-work/places/africa&quot;,&quot;text&quot;:&quot;Africa&quot;,&quot;title&quot;:&quot;&quot;,&quot;type&quot;:&quot;internal&quot;,&quot;lang&quot;:&quot;en&quot;},{&quot;href&quot;:&quot;/our-work/places/china&quot;,&quot;text&quot;:&quot;China&quot;,&quot;title&quot;:&quot;&quot;,&quot;type&quot;:&quot;internal&quot;,&quot;lang&quot;:&quot;en&quot;},{&quot;href&quot;:&quot;/our-work/places/east-asia&quot;,&quot;text&quot;:&quot;East Asia&quot;,&quot;title&quot;:&quot;&quot;,&quot;type&quot;:&quot;internal&quot;,&quot;lang&quot;:&quot;en&quot;},{&quot;href&quot;:&quot;/our-work/places/europe&quot;,&quot;text&quot;:&quot;Europe&quot;,&quot;title&quot;:&quot;&quot;,&quot;type&quot;:&quot;internal&quot;,&quot;lang&quot;:&quot;en&quot;},{&quot;href&quot;:&quot;/our-work/places/india&quot;,&quot;text&quot;:&quot;India&quot;,&quot;title&quot;:&quot;&quot;,&quot;type&quot;:&quot;internal&quot;,&quot;lang&quot;:&quot;en&quot;},{&quot;href&quot;:&quot;/our-work/places/middle-east&quot;,&quot;text&quot;:&quot;Middle East&quot;,&quot;title&quot;:&quot;&quot;,&quot;type&quot;:&quot;internal&quot;,&quot;lang&quot;:&quot;en&quot;},{&quot;href&quot;:&quot;/our-work/places/north-america&quot;,&quot;text&quot;:&quot;North America&quot;,&quot;title&quot;:&quot;&quot;,&quot;type&quot;:&quot;internal&quot;,&quot;lang&quot;:&quot;en&quot;},{&quot;href&quot;:&quot;/our-work#places&quot;,&quot;text&quot;:&quot;View all&quot;,&quot;title&quot;:&quot;&quot;,&quot;type&quot;:&quot;internal&quot;,&quot;lang&quot;:&quot;en&quot;}]},{&quot;header&quot;:&quot;Program strategies&quot;,&quot;numberOfColumns&quot;:1,&quot;link&quot;:{&quot;href&quot;:&quot;&quot;,&quot;text&quot;:&quot;&quot;,&quot;title&quot;:&quot;&quot;,&quot;type&quot;:&quot;internal&quot;,&quot;lang&quot;:&quot;en&quot;},&quot;links&quot;:[{&quot;href&quot;:&quot;/our-work/programs/global-growth-and-opportunity/agricultural-development&quot;,&quot;text&quot;:&quot;Agricultural Development&quot;,&quot;title&quot;:&quot;&quot;,&quot;type&quot;:&quot;internal&quot;,&quot;lang&quot;:&quot;en&quot;},{&quot;href&quot;:&quot;/our-work/programs/global-growth-and-opportunity/financial-services-for-the-poor&quot;,&quot;text&quot;:&quot;Financial Services for the Poor&quot;,&quot;title&quot;:&quot;&quot;,&quot;type&quot;:&quot;internal&quot;,&quot;lang&quot;:&quot;en&quot;},{&quot;href&quot;:&quot;/our-work/programs/global-development/polio&quot;,&quot;text&quot;:&quot;Polio&quot;,&quot;title&quot;:&quot;&quot;,&quot;type&quot;:&quot;internal&quot;,&quot;lang&quot;:&quot;en&quot;},{&quot;href&quot;:&quot;/our-work/programs/global-growth-and-opportunity/water-sanitation-and-hygiene&quot;,&quot;text&quot;:&quot;Water Sanitation and Hygiene&quot;,&quot;title&quot;:&quot;&quot;,&quot;type&quot;:&quot;internal&quot;,&quot;lang&quot;:&quot;en&quot;},{&quot;href&quot;:&quot;/our-work#program_strategies&quot;,&quot;text&quot;:&quot;View all&quot;,&quot;title&quot;:&quot;&quot;,&quot;type&quot;:&quot;internal&quot;,&quot;lang&quot;:&quot;en&quot;}]}],&quot;feature&quot;:{&quot;type&quot;:&quot;promo&quot;,&quot;data&quot;:{&quot;description&quot;:&quot;The Gender Equality Division funds some of the most effective advocates and programs working to advance women's economic participation and decision-making power.&quot;,&quot;link&quot;:{&quot;href&quot;:&quot;/our-work/programs/gender-equality/commitment&quot;,&quot;text&quot;:&quot;Spotlight: Gender Equality&quot;,&quot;title&quot;:null,&quot;type&quot;:null,&quot;lang&quot;:null},&quot;image&quot;:{&quot;srcSet&quot;:&quot;./-/media/gfo/4our-work/programs/gender-equality/ga16671612_ca625841.jpg?w=270&hash=2CE6A90C4249630DA0B84EF476188D79 270w,./-/media/gfo/4our-work/programs/gender-equality/ga16671612_ca625841.jpg?w=540&hash=53525F8AC1BD241DCBC20F3E7E688514 540w,./-/media/gfo/4our-work/programs/gender-equality/ga16671612_ca625841.jpg?w=2000&hash=52FA919F208B882602B7FC5D613C693F 2000w&quot;,&quot;alt&quot;:&quot;Dr. Womas, a senior researcher, works in the laboratory at the Pasteur Institute in Dakar, Senegal.&quot;,&quot;sizes&quot;:null,&quot;height&quot;:&quot;1333&quot;,&quot;width&quot;:&quot;2000&quot;}}}},{&quot;title&quot;:&quot;Ideas&quot;,&quot;subtitle&quot;:&quot;Read the latest stories, research, interviews, and news from across the Gates Foundation.&quot;,&quot;link&quot;:{&quot;href&quot;:&quot;/ideas&quot;,&quot;text&quot;:&quot;Discover our ideas&quot;,&quot;title&quot;:null,&quot;type&quot;:null,&quot;lang&quot;:&quot;en&quot;},&quot;submenu&quot;:[{&quot;header&quot;:&quot;Featured&quot;,&quot;numberOfColumns&quot;:1,&quot;link&quot;:{&quot;href&quot;:&quot;&quot;,&quot;text&quot;:&quot;&quot;,&quot;title&quot;:&quot;&quot;,&quot;type&quot;:&quot;internal&quot;,&quot;lang&quot;:&quot;en&quot;},&quot;links&quot;:[{&quot;href&quot;:&quot;/podcast/make-me-care-about&quot;,&quot;text&quot;:&quot;Podcast: Make Me Care About&quot;,&quot;title&quot;:&quot;&quot;,&quot;type&quot;:&quot;internal&quot;,&quot;lang&quot;:&quot;en&quot;},{&quot;href&quot;:&quot;/ideas/campaigns/gender-equality&quot;,&quot;text&quot;:&quot;Women’s Economic Power&quot;,&quot;title&quot;:&quot;&quot;,&quot;type&quot;:&quot;internal&quot;,&quot;lang&quot;:&quot;en&quot;},{&quot;href&quot;:&quot;/ideas/campaigns/covid-19&quot;,&quot;text&quot;:&quot;COVID-19&quot;,&quot;title&quot;:&quot;&quot;,&quot;type&quot;:&quot;internal&quot;,&quot;lang&quot;:&quot;en&quot;},{&quot;href&quot;:&quot;/ideas/media-center&quot;,&quot;text&quot;:&quot;Media Center&quot;,&quot;title&quot;:&quot;&quot;,&quot;type&quot;:&quot;internal&quot;,&quot;lang&quot;:&quot;en&quot;},{&quot;href&quot;:&quot;/ideas/speeches&quot;,&quot;text&quot;:&quot;Speeches&quot;,&quot;title&quot;:&quot;&quot;,&quot;type&quot;:&quot;internal&quot;,&quot;lang&quot;:&quot;en&quot;}]},{&quot;header&quot;:&quot;Popular topics&quot;,&quot;numberOfColumns&quot;:1,&quot;link&quot;:{&quot;href&quot;:&quot;&quot;,&quot;text&quot;:&quot;&quot;,&quot;title&quot;:&quot;&quot;,&quot;type&quot;:&quot;internal&quot;,&quot;lang&quot;:&quot;en&quot;},&quot;links&quot;:[{&quot;href&quot;:&quot;/ideas?tag=Agriculture#discovermore&quot;,&quot;text&quot;:&quot;Agriculture&quot;,&quot;title&quot;:&quot;&quot;,&quot;type&quot;:&quot;internal&quot;,&quot;lang&quot;:&quot;en&quot;},{&quot;href&quot;:&quot;/ideas?tag=Polio#discovermore&quot;,&quot;text&quot;:&quot;Polio&quot;,&quot;title&quot;:&quot;&quot;,&quot;type&quot;:&quot;internal&quot;,&quot;lang&quot;:&quot;en&quot;},{&quot;href&quot;:&quot;/ideas?tag=Research%20and%20Development#discovermore&quot;,&quot;text&quot;:&quot;Research and Development&quot;,&quot;title&quot;:&quot;&quot;,&quot;type&quot;:&quot;internal&quot;,&quot;lang&quot;:&quot;en&quot;},{&quot;href&quot;:&quot;/ideas?tag=Vaccines#discovermore&quot;,&quot;text&quot;:&quot;Vaccines&quot;,&quot;title&quot;:&quot;&quot;,&quot;type&quot;:&quot;internal&quot;,&quot;lang&quot;:&quot;en&quot;}]}],&quot;feature&quot;:{&quot;type&quot;:&quot;promo&quot;,&quot;data&quot;:{&quot;description&quot;:&quot;You’d probably rather not think about poop or where it goes, yet you might after this episode.&quot;,&quot;link&quot;:{&quot;href&quot;:&quot;/podcast/make-me-care-about/episode-1-poop&quot;,&quot;text&quot;:&quot;Make Me Care About...Poop&quot;,&quot;title&quot;:null,&quot;type&quot;:null,&quot;lang&quot;:null},&quot;image&quot;:{&quot;srcSet&quot;:&quot;./-/media/gfo/5ideas_articles/podcast/mmca_social_share_1200x600.png?w=270&hash=C0F322C0FCED83607DA26DC22101F8D8 270w,./-/media/gfo/5ideas_articles/podcast/mmca_social_share_1200x600.png?w=540&hash=1D349EDAB1F959CB8EB963588F34BE6C 540w,./-/media/gfo/5ideas_articles/podcast/mmca_social_share_1200x600.png?w=1260&hash=327C8B2454BAB499AB1A928B8E142688 1260w&quot;,&quot;alt&quot;:&quot;Make Me Care About&quot;,&quot;sizes&quot;:null,&quot;height&quot;:&quot;700&quot;,&quot;width&quot;:&quot;1260&quot;}}}}],&quot;search&quot;:{&quot;label&quot;:&quot;Search&quot;,&quot;searchUrl&quot;:&quot;/search&quot;,&quot;placeholder&quot;:&quot;Search&quot;,&quot;buttonText&quot;:&quot;Search&quot;}}" data-dictionary="{&quot;subMenuBack&quot;:&quot;Back&quot;,&quot;openMenuText&quot;:&quot;&quot;,&quot;closeMenuText&quot;:&quot;&quot;}" lang="en" dir="ltr">
-        <div className="site-header__background">
-          <div className="site-header__container container site-header__container--mobile"><a className="site-header__skip-nav" href="#main-content">Skip to main content</a>
+        {isSmallScreen ?  <div className="site-header__background">
+          <div className="site-header__container container site-header__container--mobile">
+            <a className="site-header__skip-nav" href="#main-content">Skip to main content</a>
             <div className="site-header__item-container site-header__item-container--search">
               <div className="site-header__toggle-menu">
-                <button type="button" className="btn menu-button site-header__menu-button" aria-expanded="false" aria-haspopup="true" aria-controls="site-header__panel-41"><span /></button>
-                <nav className="site-header__navigation site-header__navigation--mobile" aria-label="Primary site navigation" id="site-header__panel-41">
-                  <section className="global-nav global-nav--menu global-nav--base">
+                <button onClick={() => {
+                  setShowMobileNav(c => !c);
+                }} type="button" className="btn menu-button site-header__menu-button" aria-expanded={showMobileNav} aria-haspopup="true" aria-controls="site-header__panel-41"><span /></button>
+                <nav className={"site-header__navigation site-header__navigation--mobile " + (showMobileNav ? 'site-header__navigation--open' : '')} aria-label="Primary site navigation" id="site-header__panel-41">
+                  <section className={"global-nav global-nav--menu global-nav--base " + (activeNav === 'about-us' ? 'global-nav--open' : '')}>
                     <div className="global-nav__link-wrapper">
-                      <button type="button" className="btn global-nav__menu-button js-global-nav__focus-ref" aria-expanded="false" aria-controls="global-nav-42" data-label="About us"><span>About us</span>
+                      <button onClick={() => {
+                        setActiveNav('about-us')
+                      }} type="button" className="btn global-nav__menu-button js-global-nav__focus-ref" aria-expanded="false" aria-controls="global-nav-42" data-label="About us"><span>About us</span>
                         <svg focusable="false" className="icon icon--chevron-right" aria-hidden="true">
-                          <use xlinkHref={spriteSVG} />
+                          <use xlinkHref={'/home/Areas/GFO/assets/img/svg-sprite.svg#chevron-right'} />
                         </svg>
                       </button>
                     </div>
                     <div className="global-nav__sub-menu" id="global-nav-42">
                       <div className="global-nav__container container">
                         <div className="global-nav__back-button-wrapper">
-                          <button type="button" className="btn global-nav__back-button arrow-link arrow-link--reversed">
+                          <button onClick={() => setActiveNav(null)} type="button" className="btn global-nav__back-button arrow-link arrow-link--reversed">
                             <svg focusable="false" className="icon icon--arrow-left" aria-hidden="true">
-                              <use xlinkHref={spriteSVG} />
+                              <use xlinkHref={'/home/Areas/GFO/assets/img/svg-sprite.svg#arrow-left'} />
                             </svg>
                             <span>Back</span></button>
                         </div>
@@ -116,20 +143,22 @@ export default function Header() {
                       </div>
                     </div>
                   </section>
-                  <section className="global-nav global-nav--menu global-nav--base">
+                  <section className={"global-nav global-nav--menu global-nav--base " + (activeNav === 'our-work' ? 'global-nav--open' : '')}>
                     <div className="global-nav__link-wrapper">
-                      <button type="button" className="btn global-nav__menu-button js-global-nav__focus-ref" aria-expanded="false" aria-controls="global-nav-44" data-label="Our work"><span>Our work</span>
+                      <button onClick={() => {
+                        setActiveNav('our-work')
+                      }} type="button" className="btn global-nav__menu-button js-global-nav__focus-ref" aria-expanded="false" aria-controls="global-nav-44" data-label="Our work"><span>Our work</span>
                         <svg focusable="false" className="icon icon--chevron-right" aria-hidden="true">
-                          <use xlinkHref={spriteSVG} />
+                          <use xlinkHref={'/home/Areas/GFO/assets/img/svg-sprite.svg#chevron-right'} />
                         </svg>
                       </button>
                     </div>
                     <div className="global-nav__sub-menu" id="global-nav-44">
                       <div className="global-nav__container container">
                         <div className="global-nav__back-button-wrapper">
-                          <button type="button" className="btn global-nav__back-button arrow-link arrow-link--reversed">
+                          <button onClick={() => setActiveNav(null)} type="button" className="btn global-nav__back-button arrow-link arrow-link--reversed">
                             <svg focusable="false" className="icon icon--arrow-left" aria-hidden="true">
-                              <use xlinkHref={spriteSVG} />
+                              <use xlinkHref={'/home/Areas/GFO/assets/img/svg-sprite.svg#arrow-left'} />
                             </svg>
                             <span>Back</span></button>
                         </div>
@@ -179,21 +208,23 @@ export default function Header() {
                       </div>
                     </div>
                   </section>
-                  <section className="global-nav global-nav--menu global-nav--base">
+                  <section className={"global-nav global-nav--menu global-nav--base " + (activeNav === 'ideas' ? 'global-nav--open' : '')}>
                     <div className="global-nav__link-wrapper">
-                      <button type="button" className="btn global-nav__menu-button js-global-nav__focus-ref" aria-expanded="false" aria-controls="global-nav-46" data-label="Ideas">
+                      <button onClick={() => {
+                        setActiveNav('ideas')
+                      }} type="button" className="btn global-nav__menu-button js-global-nav__focus-ref" aria-expanded="false" aria-controls="global-nav-46" data-label="Ideas">
                         <span>Ideas</span>
                         <svg focusable="false" className="icon icon--chevron-right" aria-hidden="true">
-                          <use xlinkHref={spriteSVG} />
+                          <use xlinkHref={'/home/Areas/GFO/assets/img/svg-sprite.svg#chevron-right'} />
                         </svg>
                       </button>
                     </div>
                     <div className="global-nav__sub-menu" id="global-nav-46">
                       <div className="global-nav__container container">
                         <div className="global-nav__back-button-wrapper">
-                          <button type="button" className="btn global-nav__back-button arrow-link arrow-link--reversed">
+                          <button onClick={() => setActiveNav(null)} type="button" className="btn global-nav__back-button arrow-link arrow-link--reversed">
                             <svg focusable="false" className="icon icon--arrow-left" aria-hidden="true">
-                              <use xlinkHref={spriteSVG} />
+                              <use xlinkHref={'/home/Areas/GFO/assets/img/svg-sprite.svg#arrow-left'} />
                             </svg>
                             <span>Back</span></button>
                         </div>
@@ -244,23 +275,348 @@ export default function Header() {
                 </a><span className="site-logo__title">Bill &amp; Melinda Gates Foundation</span></div>
               </div>
               <div className="site-header__search">
-                <div className="search-box js-search-box">
+                <div className={"search-box js-search-box " + (showSearchBox ? 'search-box--open' : '')}>
                   <div className="search-box__controls">
-                    <button type="button" className="search-box__toggle btn js-search-box-toggle-button" aria-label="Show search input" aria-controls="site-search48" aria-expanded="false">
+                    <button type="button" className="search-box__toggle btn js-search-box-toggle-button"
+                            aria-label="Show search input" aria-controls="site-search95" aria-expanded={showSearchBox} onClick={() => {
+                      setShowSearchBox(c => !c);
+                    }}>
                       <div className="search-box__label">Search</div>
                       <svg focusable="false" className="icon icon--search icon--24x24" aria-hidden="true">
-                        <use xlinkHref={spriteSVG} />
+                        <use xlinkHref={'/home/Areas/GFO/assets/img/svg-sprite.svg#search'}></use>
                       </svg>
                       <svg focusable="false" className="icon icon--close icon--24x24" aria-hidden="true">
-                        <use xlinkHref={spriteSVG} />
+                        <use xlinkHref={'/home/Areas/GFO/assets/img/svg-sprite.svg#close'}></use>
                       </svg>
                     </button>
                   </div>
-                  <div className="search-box__dropdown js-search-box-content" id="site-search48">
-                    <form action="/search" method="GET" className="sc-form js-search-box-form search-box__form container"><label className="sc-form-item sc-form-item--optional"><input className="sc-form-item__field " aria-label="Search" id="GUID-333" type="search" placeholder="Search" name="q" defaultValue /><span role="alert" className="sc-form-item__error-msg" /></label>
+                  <div className="search-box__dropdown js-search-box-content" id="site-search95">
+                    <form action="/search" method="GET"
+                          className="sc-form js-search-box-form search-box__form container"><label
+                      className="sc-form-item sc-form-item--optional"><input className="sc-form-item__field "
+                                                                             aria-label="Search" id="GUID-657"
+                                                                             type="search" placeholder="Search" name="q"
+                                                                             value="" /><span role="alert"
+                                                                                              className="sc-form-item__error-msg"></span></label>
                       <button type="submit" className="search-box__search-button btn btn--primary"><span>Search</span>
                         <svg focusable="false" className="icon icon--search" aria-hidden="true">
-                          <use xlinkHref={spriteSVG} />
+                          <use xlinkHref={'/home/Areas/GFO/assets/img/svg-sprite.svg#search'}></use>
+                        </svg>
+                      </button>
+                    </form>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div> :
+        <div className="site-header__background">
+          <div className="site-header__container container site-header__container--desktop"><a
+            className="site-header__skip-nav" href="#main-content">Skip to main content</a>
+            <div className="site-header__item-container site-header__item-container--search">
+              <div className="site-header__logo">
+                <div className="site-logo"><a href="/" className="site-logo__link ">
+                  <picture className="site-logo__image">
+                    <source srcSet={LogoLG} media="(min-width: 681px)" />
+                    <img src={LogoLG} alt="Bill &amp; Melinda Gates Foundation" />
+                  </picture>
+                </a><span className="site-logo__title">Bill &amp; Melinda Gates Foundation</span></div>
+              </div>
+              <nav className="site-header__navigation site-header__navigation--desktop"
+                   aria-label="Primary site navigation" id="site-header__panel-88">
+                <section className={"global-nav global-nav--menu global-nav--base " + (activeNav === 'about-us' ? 'global-nav--open' : '')}>
+                  <div className="global-nav__link-wrapper">
+                    <button onClick={() => {
+                      setActiveNav('about-us');
+                    }} type="button" className="btn global-nav__menu-button js-global-nav__focus-ref"
+                            aria-expanded="false" aria-controls="global-nav-89" data-label="About us">
+                      <span>About us</span>
+                      <svg focusable="false" className="icon icon--chevron-down" aria-hidden="true">
+                        <use xlinkHref={'/home/Areas/GFO/assets/img/svg-sprite.svg#chevron-down'}></use>
+                      </svg>
+                    </button>
+                  </div>
+                  <div className="global-nav__sub-menu" id="global-nav-89">
+                    <div className="global-nav__container container">
+                      <div className="global-nav__intro-block">
+                        <section className="global-nav-intro"><h2 className="global-nav-intro__title">About us</h2>
+                          <div className="global-nav-intro__subtitle">Learn about our origins, how we work, committed
+                            grants, careers, and our role in fighting inequities.
+                          </div>
+                          <div className="global-nav-intro__link"><a href="/about" hrefLang="en"
+                                                                     className="arrow-link  "><span>Learn more about us</span></a>
+                          </div>
+                        </section>
+                      </div>
+                      <div className="global-nav__sub-links">
+                        <div className="global-nav__column">
+                          <ul className="global-nav__list global-nav__list--1">
+                            <li className="global-nav__item"><a className="global-nav__sub-link link"
+                                                                href="/about/our-story" hrefLang="en" lang="en">Our
+                              story</a></li>
+                            <li className="global-nav__item"><a className="global-nav__sub-link link"
+                                                                href="/about/our-role" hrefLang="en" lang="en">Our
+                              role</a></li>
+                            <li className="global-nav__item"><a className="global-nav__sub-link link"
+                                                                href="/about/foundation-faq" hrefLang="en" lang="en">Foundation
+                              FAQ</a></li>
+                            <li className="global-nav__item"><a className="global-nav__sub-link link"
+                                                                href="/about/foundation-fact-sheet" hrefLang="en"
+                                                                lang="en">Foundation Fact Sheet</a></li>
+                            <li className="global-nav__item"><a className="global-nav__sub-link link"
+                                                                href="/about/leadership" hrefLang="en"
+                                                                lang="en">Leadership</a></li>
+                            <li className="global-nav__item"><a className="global-nav__sub-link link"
+                                                                href="/about/financials" hrefLang="en"
+                                                                lang="en">Financials</a></li>
+                            <li className="global-nav__item"><a className="global-nav__sub-link link"
+                                                                href="/about/policies-and-resources" hrefLang="en"
+                                                                lang="en">Policies and Resources</a></li>
+                          </ul>
+                        </div>
+                        <div className="global-nav__column">
+                          <ul className="global-nav__list global-nav__list--1">
+                            <li className="global-nav__item"><a className="global-nav__sub-link link"
+                                                                href="/about/how-we-work" hrefLang="en" lang="en">How we
+                              work</a></li>
+                            <li className="global-nav__item"><a className="global-nav__sub-link link"
+                                                                href="/about/committed-grants" hrefLang="en" lang="en">Committed
+                              grants</a></li>
+                            <li className="global-nav__item"><a className="global-nav__sub-link link"
+                                                                href="/about/diversity-equity-inclusion" hrefLang="en"
+                                                                lang="en">Diversity, equity, and inclusion</a></li>
+                            <li className="global-nav__item"><a className="global-nav__sub-link link"
+                                                                href="/about/careers" hrefLang="en"
+                                                                lang="en">Careers</a></li>
+                            <li className="global-nav__item"><a className="global-nav__sub-link link"
+                                                                href="/about/supporting-our-work" hrefLang="en"
+                                                                lang="en">Ways to give</a></li>
+                            <li className="global-nav__item"><a className="global-nav__sub-link link"
+                                                                href="/about/offices" hrefLang="en"
+                                                                lang="en">Offices</a></li>
+                            <li className="global-nav__item"><a className="global-nav__sub-link link"
+                                                                href="/about/contact" hrefLang="en"
+                                                                lang="en">Contact</a></li>
+                          </ul>
+                        </div>
+                      </div>
+                      <div className="global-nav__feature global-nav__feature--person">
+                        <section className="global-nav-person">
+                          <div className="global-nav-person__header">Leader spotlight</div>
+                          <div className="global-nav-person__image">
+                            <img
+                            srcSet="/-/media/gfo/3about/3people/ga168933_nina_russell_2009xxxx_0002.jpg?w=100&amp;hash=B16BEBCBF763665777EB60305194E47A 100w,/-/media/gfo/3about/3people/ga168933_nina_russell_2009xxxx_0002.jpg?w=200&amp;hash=83D8917DD55D2962D73DE41F5F4BB085 200w,/-/media/gfo/3about/3people/ga168933_nina_russell_2009xxxx_0002.jpg?w=3000&amp;hash=257BE816D2047619B8DFE9C82314F7E7 3000w"
+                            sizes="100px" alt="Nina Russell" />
+                          </div>
+                          <div className="global-nav-person__name"><a href="/about/leadership/nina-russell"
+                                                                      className="global-nav-person__link link">Nina
+                            Russell</a></div>
+                          <div className="global-nav-person__title">Director, TB and HIV Prevention, Bill &amp; Melinda
+                            Gates Foundation
+                          </div>
+                        </section>
+                      </div>
+                    </div>
+                  </div>
+                </section>
+                <section className={"global-nav global-nav--menu global-nav--base " + (activeNav === 'our-work' ? 'global-nav--open' : '')}>
+                  <div className="global-nav__link-wrapper">
+                    <button onClick={() => setActiveNav('our-work')} type="button" className="btn global-nav__menu-button js-global-nav__focus-ref"
+                            aria-expanded="false" aria-controls="global-nav-91" data-label="Our work">
+                      <span>Our work</span>
+                      <svg focusable="false" className="icon icon--chevron-down" aria-hidden="true">
+                        <use xlinkHref={'/home/Areas/GFO/assets/img/svg-sprite.svg#chevron-down'}></use>
+                      </svg>
+                    </button>
+                  </div>
+                  <div className="global-nav__sub-menu" id="global-nav-91">
+                    <div className="global-nav__container container">
+                      <div className="global-nav__intro-block">
+                        <section className="global-nav-intro"><h2 className="global-nav-intro__title">Our work</h2>
+                          <div className="global-nav-intro__subtitle">Learn how our seven divisions collaborate with
+                            partners in over 130 countries to address the issues we care about and drive change.
+                          </div>
+                          <div className="global-nav-intro__link"><a href="/our-work" hrefLang="en"
+                                                                     className="arrow-link  "><span>Explore our work</span></a>
+                          </div>
+                        </section>
+                      </div>
+                      <div className="global-nav__sub-links">
+                        <div className="global-nav__column"><h3 className="global-nav__column-header"
+                                                                id="column-header-92-0">Places</h3>
+                          <ul className="global-nav__list global-nav__list--1" aria-labelledby="column-header-92-0">
+                            <li className="global-nav__item"><a className="global-nav__sub-link link"
+                                                                href="/our-work/places/africa" hrefLang="en"
+                                                                lang="en">Africa</a></li>
+                            <li className="global-nav__item"><a className="global-nav__sub-link link"
+                                                                href="/our-work/places/china" hrefLang="en"
+                                                                lang="en">China</a></li>
+                            <li className="global-nav__item"><a className="global-nav__sub-link link"
+                                                                href="/our-work/places/east-asia" hrefLang="en"
+                                                                lang="en">East Asia</a></li>
+                            <li className="global-nav__item"><a className="global-nav__sub-link link"
+                                                                href="/our-work/places/europe" hrefLang="en"
+                                                                lang="en">Europe</a></li>
+                            <li className="global-nav__item"><a className="global-nav__sub-link link"
+                                                                href="/our-work/places/india" hrefLang="en"
+                                                                lang="en">India</a></li>
+                            <li className="global-nav__item"><a className="global-nav__sub-link link"
+                                                                href="/our-work/places/middle-east" hrefLang="en"
+                                                                lang="en">Middle East</a></li>
+                            <li className="global-nav__item"><a className="global-nav__sub-link link"
+                                                                href="/our-work/places/north-america" hrefLang="en"
+                                                                lang="en">North America</a></li>
+                            <li className="global-nav__item"><a className="global-nav__sub-link link"
+                                                                href="/our-work#places" hrefLang="en" lang="en">View
+                              all</a></li>
+                          </ul>
+                        </div>
+                        <div className="global-nav__column"><h3 className="global-nav__column-header"
+                                                                id="column-header-92-1">Program strategies</h3>
+                          <ul className="global-nav__list global-nav__list--1" aria-labelledby="column-header-92-1">
+                            <li className="global-nav__item"><a className="global-nav__sub-link link"
+                                                                href="/our-work/programs/global-growth-and-opportunity/agricultural-development"
+                                                                hrefLang="en" lang="en">Agricultural Development</a>
+                            </li>
+                            <li className="global-nav__item"><a className="global-nav__sub-link link"
+                                                                href="/our-work/programs/global-growth-and-opportunity/financial-services-for-the-poor"
+                                                                hrefLang="en" lang="en">Financial Services for the
+                              Poor</a></li>
+                            <li className="global-nav__item"><a className="global-nav__sub-link link"
+                                                                href="/our-work/programs/global-development/polio"
+                                                                hrefLang="en" lang="en">Polio</a></li>
+                            <li className="global-nav__item"><a className="global-nav__sub-link link"
+                                                                href="/our-work/programs/global-growth-and-opportunity/water-sanitation-and-hygiene"
+                                                                hrefLang="en" lang="en">Water Sanitation and Hygiene</a>
+                            </li>
+                            <li className="global-nav__item"><a className="global-nav__sub-link link"
+                                                                href="/our-work#program_strategies" hrefLang="en"
+                                                                lang="en">View all</a></li>
+                          </ul>
+                        </div>
+                      </div>
+                      <div className="global-nav__feature global-nav__feature--promo">
+                        <section className="global-nav-promo">
+                          <div className="global-nav-promo__image"><img
+                            srcSet="/-/media/gfo/4our-work/places/places_china_ga1340658_ll441158_3200x1800.jpg?w=270&amp;hash=03CB7005F6920E72FD1045100C529D62 270w,/-/media/gfo/4our-work/places/places_china_ga1340658_ll441158_3200x1800.jpg?w=540&amp;hash=F52333BBA5241E9953B30BE6C25B8A66 540w,/-/media/gfo/4our-work/places/places_china_ga1340658_ll441158_3200x1800.jpg?w=3200&amp;hash=829F37F8A4F1300298A271F93A82DDEA 3200w"
+                            alt="" sizes="270px" /></div>
+                          <div className="global-nav-promo__title"><a className="link" href="/our-work/places/china">Learn
+                            about our work in China</a></div>
+                          <div className="global-nav-promo__description">We are committed to working with China to
+                            improve health and development outcomes around the world.
+                          </div>
+                        </section>
+                      </div>
+                    </div>
+                  </div>
+                </section>
+                <section className={"global-nav global-nav--menu global-nav--base " + (activeNav === 'ideas' ? 'global-nav--open' : '')}>
+                  <div className="global-nav__link-wrapper">
+                    <button onClick={() => setActiveNav('ideas')} type="button" className="btn global-nav__menu-button js-global-nav__focus-ref"
+                            aria-expanded="false" aria-controls="global-nav-93" data-label="Ideas"><span>Ideas</span>
+                      <svg focusable="false" className="icon icon--chevron-down" aria-hidden="true">
+                        <use xlinkHref={'/home/Areas/GFO/assets/img/svg-sprite.svg#chevron-down'}></use>
+                      </svg>
+                    </button>
+                  </div>
+                  <div className="global-nav__sub-menu" id="global-nav-93">
+                    <div className="global-nav__container container">
+                      <div className="global-nav__intro-block">
+                        <section className="global-nav-intro"><h2 className="global-nav-intro__title">Ideas</h2>
+                          <div className="global-nav-intro__subtitle">Read the latest stories, research, interviews, and
+                            news from across the Gates Foundation.
+                          </div>
+                          <div className="global-nav-intro__link"><a href="/ideas" hrefLang="en"
+                                                                     className="arrow-link  "><span>Discover our ideas</span></a>
+                          </div>
+                        </section>
+                      </div>
+                      <div className="global-nav__sub-links">
+                        <div className="global-nav__column"><h3 className="global-nav__column-header"
+                                                                id="column-header-94-0">Featured</h3>
+                          <ul className="global-nav__list global-nav__list--1" aria-labelledby="column-header-94-0">
+                            <li className="global-nav__item"><a className="global-nav__sub-link link"
+                                                                href="/podcast/make-me-care-about" hrefLang="en"
+                                                                lang="en">Podcast: Make Me Care About</a></li>
+                            <li className="global-nav__item"><a className="global-nav__sub-link link"
+                                                                href="/ideas/campaigns/gender-equality" hrefLang="en"
+                                                                lang="en">Women’s Economic Power</a></li>
+                            <li className="global-nav__item"><a className="global-nav__sub-link link"
+                                                                href="/ideas/campaigns/covid-19" hrefLang="en"
+                                                                lang="en">COVID-19</a></li>
+                            <li className="global-nav__item"><a className="global-nav__sub-link link"
+                                                                href="/ideas/media-center" hrefLang="en" lang="en">Media
+                              Center</a></li>
+                            <li className="global-nav__item"><a className="global-nav__sub-link link"
+                                                                href="/ideas/speeches" hrefLang="en"
+                                                                lang="en">Speeches</a></li>
+                          </ul>
+                        </div>
+                        <div className="global-nav__column"><h3 className="global-nav__column-header"
+                                                                id="column-header-94-1">Popular topics</h3>
+                          <ul className="global-nav__list global-nav__list--1" aria-labelledby="column-header-94-1">
+                            <li className="global-nav__item"><a className="global-nav__sub-link link"
+                                                                href="/ideas?tag=Agriculture#discovermore" hrefLang="en"
+                                                                lang="en">Agriculture</a></li>
+                            <li className="global-nav__item"><a className="global-nav__sub-link link"
+                                                                href="/ideas?tag=Polio#discovermore" hrefLang="en"
+                                                                lang="en">Polio</a></li>
+                            <li className="global-nav__item"><a className="global-nav__sub-link link"
+                                                                href="/ideas?tag=Research%20and%20Development#discovermore"
+                                                                hrefLang="en" lang="en">Research and Development</a>
+                            </li>
+                            <li className="global-nav__item"><a className="global-nav__sub-link link"
+                                                                href="/ideas?tag=Vaccines#discovermore" hrefLang="en"
+                                                                lang="en">Vaccines</a></li>
+                          </ul>
+                        </div>
+                      </div>
+                      <div className="global-nav__feature global-nav__feature--promo">
+                        <section className="global-nav-promo">
+                          <div className="global-nav-promo__image"><img
+                            srcSet="/-/media/gfo/5ideas_articles/articles/20230521-artificial-intelligence-ai-development-principles/hero_ideas_mark-ai-principles_gettyimages-539454508_05212023_1600x1000.jpg?w=270&amp;hash=DC8DA3014205BF849245C5927DBE0A72 270w,/-/media/gfo/5ideas_articles/articles/20230521-artificial-intelligence-ai-development-principles/hero_ideas_mark-ai-principles_gettyimages-539454508_05212023_1600x1000.jpg?w=540&amp;hash=CB5D62EC8A800395A7AB5433A3B0EFEE 540w,/-/media/gfo/5ideas_articles/articles/20230521-artificial-intelligence-ai-development-principles/hero_ideas_mark-ai-principles_gettyimages-539454508_05212023_1600x1000.jpg?w=1600&amp;hash=905265CDBD7C2E7E21C8F94391FAF98A 1600w"
+                            alt="A young farmer in his vegetable garden references information on his tablet."
+                            sizes="270px" /></div>
+                          <div className="global-nav-promo__title"><a className="link"
+                                                                      href="/ideas/articles/artificial-intelligence-ai-development-principles">The
+                            first principles guiding our work with AI</a></div>
+                          <div className="global-nav-promo__description">Gates Foundation CEO Mark Suzman shares the
+                            first principles on artificial intelligence (AI) that will be used to guide the foundation’s
+                            use of AI.
+                          </div>
+                        </section>
+                      </div>
+                    </div>
+                  </div>
+                </section>
+              </nav>
+              <div ref={searchRef} className="site-header__search">
+                <div className={"search-box js-search-box " + (showSearchBox ? 'search-box--open' : '')}>
+                  <div className="search-box__controls">
+                    <button type="button" className="search-box__toggle btn js-search-box-toggle-button"
+                            aria-label="Show search input" aria-controls="site-search95" aria-expanded={showSearchBox} onClick={() => {
+                              setShowSearchBox(c => !c);
+                    }}>
+                      <div className="search-box__label">Search</div>
+                      <svg focusable="false" className="icon icon--search icon--24x24" aria-hidden="true">
+                        <use xlinkHref={'/home/Areas/GFO/assets/img/svg-sprite.svg#search'}></use>
+                      </svg>
+                      <svg focusable="false" className="icon icon--close icon--24x24" aria-hidden="true">
+                        <use xlinkHref={'/home/Areas/GFO/assets/img/svg-sprite.svg#close'}></use>
+                      </svg>
+                    </button>
+                  </div>
+                  <div className="search-box__dropdown js-search-box-content" id="site-search95">
+                    <form action="/search" method="GET"
+                          className="sc-form js-search-box-form search-box__form container"><label
+                      className="sc-form-item sc-form-item--optional"><input className="sc-form-item__field "
+                                                                             aria-label="Search" id="GUID-657"
+                                                                             type="search" placeholder="Search" name="q"
+                                                                             value="" /><span role="alert"
+                                                                                            className="sc-form-item__error-msg"></span></label>
+                      <button type="submit" className="search-box__search-button btn btn--primary"><span>Search</span>
+                        <svg focusable="false" className="icon icon--search" aria-hidden="true">
+                          <use xlinkHref={spriteSVG}></use>
                         </svg>
                       </button>
                     </form>
@@ -270,6 +626,7 @@ export default function Header() {
             </div>
           </div>
         </div>
+        }
       </section>
     </header>
   )

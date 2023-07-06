@@ -29,6 +29,7 @@ export default function Dashboard() {
   const [formUser, setFormUser] = useContext(UserContext).formUser;
   const [, setProfileUser] = useContext(UserContext).profileUser;
   const [activeUsers, setActiveUsers] = useContext(UserContext).activeUsers;
+  const [lectureWatchedCount, setLectureWatchedCount] = useState(0);
   const paginatedList = useRef(null);
   const [noMore, setNoMore] = useState(false);
 
@@ -72,6 +73,9 @@ export default function Dashboard() {
       await list.transformList();
 
       setActiveUsers(list.transformedList);
+
+      const lectureCount = list.utilityFunctions.getWatchLecturesCount();
+      setLectureWatchedCount(lectureCount);
     })
   }, [showDrawer]);
 
@@ -93,7 +97,7 @@ export default function Dashboard() {
   }} noMore={noMore} handleBackButton={() => setShowDrawer(null)} />) : null;
 
   return review ? (
-    <main className="text-white">
+    <main className="text-white h-screen w-screen overflow-auto" style={{background: '#181818'}}>
       <div className="grid gap-5 px-6 lg:px-0 grid-cols-2 max-w-4xl mx-auto mt-10">
         <div className="col-span-2 dashboard-card flex items-center">
           <h2 className="text-5xl font-bold mr-4">{review.length}</h2>
@@ -113,7 +117,7 @@ export default function Dashboard() {
           <p className="text-sm text-gray-500 dark:text-gray-400">Scholarships Granted</p>
         </div>
         <div className="dashboard-card" onClick={() => setShowDrawer(true)}>
-          <p className="text-red-500 font-medium">0</p>
+          <p className="text-red-500 font-medium">{lectureWatchedCount}</p>
           <p className="text-sm text-gray-500 dark:text-gray-400">Lectures Watched</p>
         </div>
         <div className="col-span-2">

@@ -232,6 +232,14 @@ async function getActiveUsers(activeUserMap) {
       return 0
     },
     metaDataMap: activeUserMap.metaDataMap,
+    utilityFunctions: {
+      getWatchLecturesCount: () => {
+        return Object.keys(activeUserMap.metaDataMap).reduce((acc, cur, ind) => {
+          acc += activeUserMap.metaDataMap[cur]?.lectures_watched_count ?? 0;
+          return acc;
+        }, 0)
+      }
+    },
     transformItemFn: doc => {
       if(!doc.exists) return null;
 
@@ -280,6 +288,8 @@ export class PaginatedList {
   _prefetchedList = []
 
   _transformedList = []
+
+  utilityFunctions = {};
 
   get list() {
     return this._list
@@ -352,6 +362,7 @@ export class PaginatedList {
                 sortFunction,
                 metaDataMap,
                 transformItemFn,
+                utilityFunctions,
                 prefetchedList
               }) {
     this.doc = doc
@@ -360,6 +371,7 @@ export class PaginatedList {
     this.sortFunction = sortFunction
     this.metaDataMap = metaDataMap
     this.transformItemFn = transformItemFn
+    this.utilityFunctions = utilityFunctions
     this.prefetchedList = prefetchedList
     this.totalCount = sortedListToFetch.length
   }
@@ -383,7 +395,8 @@ export class PaginatedList {
     let docs
     if (!this.prefetchedList) {
       this.loading = true
-      const whereQuery = this.doc.where(list)
+      const whereQuery = this.doc.where(list);
+      console.log('whereQuery - ', whereQuery);
       const querySnapshot = await db
         .collection(this.doc.collectionPath)
         .where(...whereQuery)

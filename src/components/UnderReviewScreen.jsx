@@ -5,6 +5,7 @@ import ArrowBackIos from "@material-ui/icons/ArrowBackIos";
 import PastScholarshipScreen from "./PastScholarshipScreen";
 import SwipeableViews from "react-swipeable-views-react-18-fix";
 import {UserContext} from "../context/UserContext";
+import {getClassName} from "../helpers";
 
 const defaultPic = 'https://firebasestorage.googleapis.com/v0/b/avian-display-193502.appspot.com/o/users%2Fuser_profile%2Fdefault%2Fimage.jpg?alt=media&token=da277c04-0b39-49a3-8b90-4d6e93129a93'
 
@@ -37,7 +38,7 @@ export default function UnderReviewScreen({handleBackButton}) {
           {review.map((item) => {
 
             return (
-              <UserListItem item={item} containerClassName="mb-2" src={item.profile_url} title={item.first_name + " " + item.last_name} subTitle={item.grade}/>
+              <UserListItem item={item} containerClassName="mb-2" src={item.profile_url} title={item.first_name + " " + item.last_name} subTitle={getClassName(item.grade)}/>
             )
           })}
         </div>

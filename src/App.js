@@ -13,7 +13,8 @@ import {auth, db} from "./config";
 import Dashboard from "./components/Dashboard";
 import Layout from "./components/Layout";
 import LandingPage from "./components/LandingPage";
-
+import "./assets/external.css";
+import Admin from "./pages/Admin";
 
 function App() {
   const [user, setUser] = useContext(UserContext).user;
@@ -30,7 +31,7 @@ function App() {
         setUser(userDoc.data());
         console.log('userDoc.data() - ', userDoc.data());
         if(userDoc.data().is_instructor) {
-          history.push('/admin/dashboard')
+          // history.push('/admin/dashboard')
           return setAllowLoggedInUser(true);
         }
         setAllowLoggedInUser(false);
@@ -43,22 +44,15 @@ function App() {
 
   return fetching ? <></> : (
     <>
-      {(!user || (user && !allowLoggedInUser)) && <Switch>
+      <Switch>
         <Route exact path={"/"}>
           <LandingPage />
         </Route>
-        <Route exact path={"/admin/login"}>
-          <Login />
+        <Route exact path={"/admin"}>
+          <Admin />
         </Route>
         <Redirect to="/" />
-      </Switch>}
-      {(user || (user && allowLoggedInUser)) && <Switch>
-        <Route exact path={"/admin/dashboard"}>
-          <Layout>
-            <Dashboard />
-          </Layout>
-        </Route>
-      </Switch>}
+      </Switch>
     </>
   );
 }

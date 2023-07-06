@@ -41,7 +41,7 @@ export default function Footer() {
                     <svg className="icon icon--social-twitter icon--32x32" aria-hidden="true"
                          focusable="false">
                       <use xmlnsXlink="http://www.w3.org/1999/xlink"
-                           xlinkHref="./Areas/GFO/assets/img/svg-sprite.svg?v=834a7c92fa590368c2a649dc4b1ee496ea7122fc#social-twitter">
+                           xlinkHref="/home/Areas/GFO/assets/img/svg-sprite.svg?v=834a7c92fa590368c2a649dc4b1ee496ea7122fc#social-twitter">
 
                       </use>
                     </svg>
@@ -52,7 +52,7 @@ export default function Footer() {
                   <svg className="icon icon--social-facebook icon--32x32" aria-hidden="true"
                        focusable="false">
                     <use xmlnsXlink="http://www.w3.org/1999/xlink"
-                         xlinkHref="./Areas/GFO/assets/img/svg-sprite.svg?v=834a7c92fa590368c2a649dc4b1ee496ea7122fc#social-facebook">
+                         xlinkHref="/home/Areas/GFO/assets/img/svg-sprite.svg?v=834a7c92fa590368c2a649dc4b1ee496ea7122fc#social-facebook">
 
                     </use>
                   </svg>
@@ -63,7 +63,7 @@ export default function Footer() {
                   <svg className="icon icon--social-linkedin icon--32x32" aria-hidden="true"
                        focusable="false">
                     <use xmlnsxlink="http://www.w3.org/1999/xlink"
-                         xlinkHref="./Areas/GFO/assets/img/svg-sprite.svg?v=834a7c92fa590368c2a649dc4b1ee496ea7122fc#social-linkedin">
+                         xlinkHref="/home/Areas/GFO/assets/img/svg-sprite.svg?v=834a7c92fa590368c2a649dc4b1ee496ea7122fc#social-linkedin">
 
                     </use>
                   </svg>
@@ -74,7 +74,7 @@ export default function Footer() {
                   <svg className="icon icon--social-instagram icon--32x32" aria-hidden="true"
                        focusable="false">
                     <use xmlnsXlink="http://www.w3.org/1999/xlink"
-                         xlinkHref="./Areas/GFO/assets/img/svg-sprite.svg?v=834a7c92fa590368c2a649dc4b1ee496ea7122fc#social-instagram">
+                         xlinkHref="/home/Areas/GFO/assets/img/svg-sprite.svg?v=834a7c92fa590368c2a649dc4b1ee496ea7122fc#social-instagram">
 
                     </use>
                   </svg>
@@ -84,7 +84,7 @@ export default function Footer() {
                        className="social-connect-icons__button js-social-follow" target="_blank">
                   <svg className="icon icon--social-youtube icon--32x32" aria-hidden="true" focusable="false">
                     <use xmlnsXlink="http://www.w3.org/1999/xlink"
-                         xlinkHref="./Areas/GFO/assets/img/svg-sprite.svg?v=834a7c92fa590368c2a649dc4b1ee496ea7122fc#social-youtube">
+                         xlinkHref="/home/Areas/GFO/assets/img/svg-sprite.svg?v=834a7c92fa590368c2a649dc4b1ee496ea7122fc#social-youtube">
 
                     </use>
                   </svg>
@@ -100,17 +100,17 @@ export default function Footer() {
                   <a className="global-footer__link link" href="/our-work">Our work</a></li>
                 <li className="global-footer__link-item" lang="en" dir="ltr">
                   <a href="/ideas" className="global-footer__link link">Ideas</a></li>
-                <li className="global-footer__link-item" lang="en" dir="ltr">
-                  <a className="global-footer__link link" onClick={(e) => {
-                    e.preventDefault();
-                    history.push('/admin/login')
-                  }}>Admin Login</a></li>
               </ul>
             </nav>
             <nav className="global-footer__contact-links" aria-label="Contact Us">
               <ul className="global-footer__items">
                 <li className="global-footer__link-item" lang="en" dir="ltr">
                   <a className="global-footer__link link" href="/about/contact">Contact</a></li>
+                <li className="global-footer__link-item" lang="en" dir="ltr">
+                  <a className="global-footer__link link" onClick={(e) => {
+                    e.preventDefault();
+                    history.push('/admin')
+                  }}>Admin Login</a></li>
                 <li className="global-footer__link-item" lang="en" dir="ltr">
                   <a className="global-footer__link link" href="/ideas/media-center">Media Center</a></li>
                 <li className="global-footer__link-item" lang="en" dir="ltr">

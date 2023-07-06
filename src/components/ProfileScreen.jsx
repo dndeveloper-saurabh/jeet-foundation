@@ -27,7 +27,16 @@ export default function ProfileScreen({handleBackButton}) {
 
     db
       .collection('scholarships')
-      .where('')
+      .where('uid', '==', profileUser?.uid)
+      .where('status', '==', 'approved')
+      .get()
+      .then(querySnapshot => {
+        if(querySnapshot.docs.length > 0) {
+          setGranted(true);
+        } else {
+          setGranted(false);
+        }
+      })
   }, [profileUser?.uid])
 
   return profileUser ? (
@@ -85,11 +94,11 @@ export default function ProfileScreen({handleBackButton}) {
             <Chart chartData={chartData} />
           </div>
         </div>
-        <div className="profile-card my-6 p-4">
+        {granted && <div className="profile-card my-6 p-4">
           <div className="text-gray-500 text-sm font-medium">Scholarship</div>
           <img className="w-40 mx-auto" src={ScholarshipGranted} alt=""/>
           <div className="text-center text-blue-500 text-sm font-medium">Scholarship Already Granted</div>
-        </div>
+        </div>}
       </div>
     </div>
   ) : null

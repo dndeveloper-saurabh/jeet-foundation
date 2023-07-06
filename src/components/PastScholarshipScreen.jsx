@@ -6,6 +6,7 @@ import Tabs from '@material-ui/core/Tabs';
 import Tab from '@material-ui/core/Tab';
 import SwipeableViews from "react-swipeable-views-react-18-fix";
 import {UserContext} from "../context/UserContext";
+import {getClassName} from "../helpers";
 
 const defaultPic = 'https://lh3.googleusercontent.com/a/AGNmyxaNQYQ0bte8Vz4NkpY7FX_oalIkGPue0dfhwbi7=s96-c'
 
@@ -126,10 +127,10 @@ export default function PastScholarshipScreen({handleBackButton}) {
           style={{height: 'auto'}}
         >
           <>
-            {approved.map(item => <UserListItem item={item} containerClassName="mb-2" src={item.profile_url} title={item.first_name + " " + item.last_name} subTitle={item.grade}/>)}
+            {approved.map(item => <UserListItem item={item} containerClassName="mb-2" src={item.profile_url} title={item.first_name + " " + item.last_name} subTitle={getClassName(item.grade)}/>)}
           </>
           <>
-            {rejected.map(item => <UserListItem item={item} containerClassName="mb-2" src={item.profile_url} title={item.first_name + " " + item.last_name} subTitle={item.grade}/>)}
+            {rejected.map(item => <UserListItem item={item} containerClassName="mb-2" src={item.profile_url} title={item.first_name + " " + item.last_name} subTitle={getClassName(item.grade)}/>)}
           </>
         </SwipeableViews>
       </div>

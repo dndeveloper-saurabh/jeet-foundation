@@ -32,7 +32,7 @@ export default function Login() {
   }
 
   return (
-    <div className="flex flex-col h-screen items-center justify-center">
+    <div className="flex flex-col h-screen items-center justify-center w-screen" style={{background: '#181818'}}>
       {/*<button>Sign in with Google</button>*/}
       {/*<div>*/}
       {/*  OR*/}
