@@ -6,6 +6,7 @@ import {
   Redirect,
   useHistory
 } from "react-router-dom";
+import 'react-phone-input-2/lib/style.css'
 import "./index.css";
 import Login from "./components/Login";
 import {UserContext} from "./context/UserContext";
@@ -15,6 +16,8 @@ import Layout from "./components/Layout";
 import LandingPage from "./components/LandingPage";
 import "./assets/external.css";
 import Admin from "./pages/Admin";
+import TermsOfService from "./components/TermsOfService";
+import PrivacyPolicy from "./components/PrivacyPolicy";
 
 function App() {
   const [user, setUser] = useContext(UserContext).user;
@@ -23,23 +26,30 @@ function App() {
   const [fetching, setFetching] = useState(true);
 
   useEffect(() => {
+    let unsub = () => {};
     auth.onAuthStateChanged(async (user) => {
       setFetching(false);
       if(user) {
-        const userDoc = await db.collection('users')
-          .doc(user.uid).get();
-        setUser(userDoc.data());
-        console.log('userDoc.data() - ', userDoc.data());
-        if(userDoc.data().is_instructor) {
-          // history.push('/admin/dashboard')
-          return setAllowLoggedInUser(true);
-        }
-        setAllowLoggedInUser(false);
+        unsub = db.collection('users')
+          .doc(user.uid)
+          .onSnapshot((userDoc) => {
+            setUser(userDoc.data());
+            console.log('userDoc.data() - ', userDoc.data());
+            if(userDoc.data().is_instructor) {
+              // history.push('/admin/dashboard')
+              return setAllowLoggedInUser(true);
+            }
+            setAllowLoggedInUser(false);
+          })
       } else {
         setUser(null);
         setAllowLoggedInUser(false);
       }
     })
+
+    return () => {
+      unsub();
+    }
   }, [history])
 
   return fetching ? <></> : (
@@ -50,6 +60,12 @@ function App() {
         </Route>
         <Route exact path={"/admin"}>
           <Admin />
+        </Route>
+        <Route exact path={"/terms_of_service"}>
+          <TermsOfService />
+        </Route>
+        <Route exact path={"/privacy_policy"}>
+          <PrivacyPolicy />
         </Route>
         <Redirect to="/" />
       </Switch>

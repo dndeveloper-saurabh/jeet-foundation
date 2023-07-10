@@ -1,0 +1,61 @@
+.pdf-preview-modal {
+  min-width: 360px;
+  width: auto;
+}
+.pdf-preview-modal .pdf-preview-container {
+  width: 100%;
+  position: relative;
+  min-height: 360px;
+  max-width: 640px;
+  transition: all ease-in-out 250ms;
+}
+.pdf-preview-modal .pdf-preview-container > .react-pdf__Document {
+  width: 100%;
+  max-height: 100% !important;
+}
+.pdf-preview-modal .pdf-preview-container > .react-pdf__Document .react-pdf__Page > canvas {
+  width: 100% !important;
+  height: auto !important;
+  max-height: 720px !important;
+}
+.pdf-preview-modal .pdf-preview-container > div {
+  display: flex;
+  justify-content: center;
+}
+.pdf-preview-modal .pdf-preview-container > div .pdf-actions {
+  display: flex;
+  flex: 1;
+  justify-content: center;
+}
+.pdf-preview-modal .pdf-preview-container > div .pdf-actions p {
+  background: rgba(72, 80, 89, 0.9);
+  position: absolute;
+  bottom: calc(27px + 2.5em);
+  padding: 0.25rem 0.1rem;
+  color: var(--color-primary);
+  width: 120px;
+  display: flex;
+  justify-content: center;
+}
+.pdf-preview-modal .pdf-preview-container > div .pdf-actions .action-buttons {
+  background: rgba(72, 80, 89, 0.9);
+  width: 120px;
+  position: absolute;
+  bottom: 30px;
+  display: flex;
+  justify-content: center;
+}
+.pdf-preview-modal .pdf-preview-container > div .pdf-actions .action-buttons > button {
+  color: var(--color-primary);
+  flex: 1;
+  background: none;
+  padding: 0.25rem 0.75rem;
+  font-size: 1.25em;
+  border: none;
+  cursor: pointer;
+  transition: all ease-in-out 250ms;
+}
+.pdf-preview-modal .pdf-preview-container > div .pdf-actions .action-buttons > button:disabled {
+  background: none;
+}
+

@@ -7,15 +7,18 @@ import UserContextProvider from "./context/UserContext";
 import {
   BrowserRouter as Router,
 } from "react-router-dom";
+import ThemeContextProvider from "./context/ThemeContext";
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
-    <UserContextProvider>
-      <Router>
-        <App />
-      </Router>
-    </UserContextProvider>
+    <ThemeContextProvider>
+      <UserContextProvider>
+        <Router>
+          <App />
+        </Router>
+      </UserContextProvider>
+    </ThemeContextProvider>
   </React.StrictMode>
 );
 

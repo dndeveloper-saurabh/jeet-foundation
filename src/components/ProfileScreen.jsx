@@ -20,7 +20,7 @@ export default function ProfileScreen({handleBackButton}) {
 
   useEffect(() => {
     if(!profileUser?.uid) return () => {};
-    getLifeTimeEngagement(profileUser.uid)
+    getLifeTimeEngagement(profileUser.uid, profileUser)
       .then(data => {
         setChartData(data);
       })
@@ -41,7 +41,7 @@ export default function ProfileScreen({handleBackButton}) {
 
   return profileUser ? (
     <div className="flex flex-col h-full">
-      <ArrowBackIos style={{fontSize: '20px'}} className="cursor-pointer text-white" onClick={handleBackButton} />
+      <ArrowBackIos style={{fontSize: '20px'}} className="cursor-pointer text-zinc-900 dark:text-white" onClick={handleBackButton} />
       <div className="font-medium dark:text-white justify-self-start px-2 text-center">
         <div className="w-32 h-32 overflow-hidden rounded-full mx-auto my-4">
           <img className="w-full h-auto" src={profileUser.image} alt="" />

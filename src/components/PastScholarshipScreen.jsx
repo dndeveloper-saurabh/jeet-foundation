@@ -7,6 +7,7 @@ import Tab from '@material-ui/core/Tab';
 import SwipeableViews from "react-swipeable-views-react-18-fix";
 import {UserContext} from "../context/UserContext";
 import {getClassName} from "../helpers";
+import {ThemeContext} from "../context/ThemeContext";
 
 const defaultPic = 'https://lh3.googleusercontent.com/a/AGNmyxaNQYQ0bte8Vz4NkpY7FX_oalIkGPue0dfhwbi7=s96-c'
 
@@ -31,7 +32,6 @@ const AntTab = withStyles((theme) => ({
   root: {
     textTransform: 'none',
     minWidth: 72,
-    color: '#fff',
     fontWeight: theme.typography.fontWeightRegular,
     marginRight: theme.spacing(4),
     fontFamily: [
@@ -58,7 +58,7 @@ const AntTab = withStyles((theme) => ({
       color: '#dd2476',
     },
   },
-  selected: {},
+  selected: {}
 }))((props) => <Tab disableRipple {...props} />);
 
 const StyledTabs = withStyles({
@@ -91,10 +91,11 @@ const StyledTab = withStyles((theme) => ({
   },
 }))((props) => <Tab disableRipple {...props} />);
 
-export default function PastScholarshipScreen({handleBackButton}) {
-  const [activeTab, setActiveTab] = React.useState(0);
+export default function PastScholarshipScreen({handleBackButton, tabIndex = 0}) {
+  const [activeTab, setActiveTab] = React.useState(tabIndex);
   const [rejected] = useContext(UserContext).rejected;
   const [approved] = useContext(UserContext).approved;
+  const [isDark] = useContext(ThemeContext).isDark;
 
   const handleChange = (event, newValue) => {
     setActiveTab(newValue);
@@ -102,7 +103,7 @@ export default function PastScholarshipScreen({handleBackButton}) {
 
   return (
     <div className="flex flex-col h-full">
-      <div className="flex items-center text-white mb-3">
+      <div className="flex items-center text-zinc-900 dark:text-white mb-3">
         <ArrowBackIos style={{fontSize: '18px'}} className="cursor-pointer" onClick={handleBackButton} />
         <div className="flex-1 ml-2 text-xl flowingText font-bold">Past Scholarships</div>
       </div>
@@ -113,8 +114,8 @@ export default function PastScholarshipScreen({handleBackButton}) {
         textColor="primary"
         centered
       >
-        <AntTab label="Accepted" />
-        <AntTab label="Rejected" />
+        <AntTab style={{color: activeTab === 0 ? '#dd2476' : (isDark ? '#fff' : 'rgba(0,0,0,0.5)')}} label="Accepted" />
+        <AntTab style={{color: activeTab === 1 ? '#dd2476' : (isDark ? '#fff' : 'rgba(0,0,0,0.5)')}} label="Rejected" />
       </AntTabs>
       <div className="[&>*]:mt-3 hide-scrollbar flex-1 mt-4 overflow-auto">
         <SwipeableViews

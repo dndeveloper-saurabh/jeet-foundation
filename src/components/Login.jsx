@@ -80,15 +80,15 @@ export default function Login() {
 
             }} />
           </h1>
-          <p>Looks like your account is not verified yet.</p>
+          <p className="text-white">Looks like your account is not verified yet.</p>
           <div className="image">
             <img src={woman} alt=""/>
           </div>
           <div className="image-placeholder">
             <div className="text-white flex flex-col items-center mt-5 w-full">
-              <p className="text-white text-opacity-80">You are signed in with:</p>
-              <p className="text-base font-semibold text-xl">{user?.email}</p>
-              <p className="text-center font-medium text-white mt-4 text-opacity-80">Make sure that this account has all the required permissions!</p>
+              <p className="text-white text-md font-medium text-opacity-50">You are signed in with:</p>
+              <p className="font-semibold text-lg">{user?.email}</p>
+              <p className="w-60 text-center font-bold text-white text-sm mt-4 text-opacity-50">Make sure that this account has all the required permissions!</p>
             </div>
             <svg width="428" height="83" viewBox="0 0 428 83" fill="none" xmlns="http://www.w3.org/2000/svg">
               <path d="M427.5 19C260 -25.5 93.6667 21.8333 0 46.5V83C106 51.4 281.5 34.5 427.5 83V19Z" fill="#7C0709"/>
@@ -99,14 +99,16 @@ export default function Login() {
             <div className="bottom">
               <img src={whiteLogo} alt=""/>
               <div className="bottom-group">
-                  <span onClick={() => {
+                  <span className="cursor-pointer" onClick={() => {
                     // setDocumentToShow(termsOfService);
                     // setShowPDF(true);
+                    window.open(window.location.origin + '/terms_of_service', '_blank');
                   }}>Terms of Service</span>
                 <div className="separator" />
-                <span onClick={() => {
+                <span className="cursor-pointer" onClick={() => {
                   // setDocumentToShow(privacyPolicy);
                   // setShowPDF(true);
+                  window.open(window.location.origin + '/privacy_policy', '_blank');
                 }}>Privacy Policy</span>
               </div>
             </div>

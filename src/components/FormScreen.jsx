@@ -131,7 +131,7 @@ export default function FormScreen() {
   return (
     <div className="flex flex-col h-full">
       <div className="flex items-center text-white mb-3">
-        <ArrowBackIos style={{fontSize: '18px'}} className="cursor-pointer" onClick={() => {
+        <ArrowBackIos style={{fontSize: '18px'}} className="cursor-pointer text-zinc-900 dark:text-white" onClick={() => {
           setMainActiveTab(() => {
             setTimeout(() => {
               setFormUser(null);
@@ -193,7 +193,7 @@ export default function FormScreen() {
               ))}
             </div>
           </div>
-          <div className="w-full bg-gray-900 h-16 px-3 py-3 grid grid-cols-7 gap-2">
+          <div className="w-full bg-gray-200 dark:bg-gray-900 h-16 px-3 py-3 grid grid-cols-7 gap-2">
             {buttons}
           </div>
         </div>

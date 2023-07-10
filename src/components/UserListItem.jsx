@@ -130,7 +130,7 @@ export default function UserListItem({item, containerClassName, _src, title, sub
           <div className="text-sm text-gray-500 dark:text-gray-500">{subTitle}</div>
         </div>
         <button
-          className="pustack-give-gradient-list-item-expand-btn"
+          className="pustack-give-gradient-list-item-expand-btn bg-white dark:bg-zinc-900 text-zinc-900 dark:text-white"
           onClick={() => {}}
         >
           <KeyboardArrowDownRoundedIcon />

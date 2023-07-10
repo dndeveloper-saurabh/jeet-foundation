@@ -1,6 +1,7 @@
-import {db, firebase} from "../config";
+import {db, firebase, storage} from "../config";
 import {castIndianTime} from "../helpers/getIndianTime";
 import moment from 'moment';
+import { v4 as uuidv4 } from "uuid";
 
 export const getDateFromHash = (data) => {
   return new Date(data.year, data.month - 1, data.day, data.hour, data.minute);
@@ -260,21 +261,24 @@ async function getActiveUsers(activeUserMap) {
   })
 }
 
-export const getLifeTimeEngagement = async (userId) => {
+export const getLifeTimeEngagement = async (userId, profileUser) => {
   // /user_engagement/daily_engagement/0pop6z39XhR3zXwSn2H7BJRE7er1/lifetime
+  console.log('profileUser - ', profileUser);
   const snapshot = await db.collection('user_engagement')
     .doc('daily_engagement')
     .collection(userId)
     .doc('lifetime')
     .get();
 
-  const lastYear = moment().add(-1, 'years').clone();
+  const signUpTs = profileUser.data.sign_up_ts;
+
+  const lastYear = moment(signUpTs).clone();
   const data = [];
   for(let i = 0; i < 12; i++) {
     let b = lastYear.clone().add(i, 'month');
     // {name: 'Jan', Lectures: 0, pv: 2400, amt: 2400},
     data.push({
-      name: b.format('MMM'),
+      name: b.format('MMM YYYY'),
       Lectures: snapshot.data().monthly_engagement[formatDateDoc(b, null, true)]?.total_watched_lecture_count ?? 0
     })
   }
@@ -439,3 +443,29 @@ export class PaginatedList {
   }
 }
 
+export const updateProfileImage = async (file, userId) => {
+  let path = `users/user_profile/${userId}/${uuidv4()}.jpg`;
+  let _url = null;
+
+  await storage
+    .ref()
+    .child(path)
+    .put(await fetch(file?.url).then((r) => r.blob()))
+    .then(async (snapshot) => {
+      return snapshot.ref.getDownloadURL().then((url) => (_url = url));
+    });
+
+  if (_url || "") {
+    return await db
+      .collection("users")
+      .doc(userId)
+      .set(
+        {
+          profile_url: _url,
+        },
+        { merge: true }
+      )
+      .then(() => [_url, true])
+      .catch(() => [_url, false]);
+  } else return [_url, false];
+};

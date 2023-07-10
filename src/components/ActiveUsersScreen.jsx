@@ -41,7 +41,7 @@ export default function ActiveUsersScreen({handleBackButton, fetchMore = () => {
   return (
     <div className="flex flex-col h-full">
       <div className="flex items-center text-white">
-        <ArrowBackIos style={{fontSize: '18px'}} className="cursor-pointer" onClick={handleBackButton} />
+        <ArrowBackIos style={{fontSize: '18px'}} className="cursor-pointer text-zinc-900 dark:text-white" onClick={handleBackButton} />
         <div className="flex-1 ml-2 text-xl flowingText font-bold">Active Users</div>
       </div>
       <div className="[&>*]:mt-3 hide-scrollbar flex-1 mt-4 overflow-auto">
