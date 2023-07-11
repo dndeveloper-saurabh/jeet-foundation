@@ -2,6 +2,7 @@ import React, {useMemo, useContext, useState} from 'react';
 import PhoneIcon from "@material-ui/icons/Phone";
 import ArrowBackIos from "@material-ui/icons/ArrowBackIos";
 import JeetFoundationLogo from '../assets/images/jeet-foundation-white.svg';
+import JeetFoundationDarkLogo from '../assets/images/jeet-foundation-black.svg';
 import RecentActorsIcon from '@material-ui/icons/RecentActors';
 import SchoolIcon from '@material-ui/icons/School';
 import CakeIcon from '@material-ui/icons/Cake';
@@ -10,6 +11,9 @@ import {UserContext} from "../context/UserContext";
 import {getClassName} from "../helpers";
 import Loader from "./Loader";
 import {db} from "../config";
+import {ThemeContext} from "../context/ThemeContext";
+import {grantApplication} from "../database";
+import {EmailOutlined} from "@material-ui/icons";
 
 function GrantButton({className, applicationId}) {
   const [loading, setLoading] = useState(false);
@@ -17,33 +21,7 @@ function GrantButton({className, applicationId}) {
 
   const handleClick = async () => {
     setLoading(true)
-    fetch(
-      "https://us-central1-avian-display-193502.cloudfunctions.net/updateScholarshipSheet",
-      {
-        method: "POST",
-        mode: "cors",
-        cache: "no-cache",
-        credentials: "same-origin",
-        headers: {
-          Accept: "application/json",
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          column: "Approved?",
-          value: "Yes",
-          application_id: applicationId
-        }),
-      }
-    )
-      .then(() => console.log("rejected"))
-      .catch((err) => console.log(err));
-
-    await db
-      .collection('scholarships')
-      .doc(applicationId)
-      .set({
-        status: 'approved'
-      }, {merge: true})
+    await grantApplication(applicationId);
     setShowDrawer(null);
     setLoading(false)
   }
@@ -102,6 +80,7 @@ function RescindButton({className, label, applicationId}) {
 export default function FormScreen() {
   const [formUser, setFormUser] = useContext(UserContext).formUser;
   const [, setMainActiveTab] = useContext(UserContext).activeTab;
+  const [isDark] = useContext(ThemeContext).isDark;
 
   const marksMap = useMemo(() => {
     console.log('formUser - ', formUser);
@@ -129,7 +108,7 @@ export default function FormScreen() {
   }
 
   return (
-    <div className="flex flex-col h-full">
+    <div className="flex flex-col h-full font-sans">
       <div className="flex items-center text-white mb-3">
         <ArrowBackIos style={{fontSize: '18px'}} className="cursor-pointer text-zinc-900 dark:text-white" onClick={() => {
           setMainActiveTab(() => {
@@ -141,7 +120,7 @@ export default function FormScreen() {
         }} />
         <div className="flex-1 ml-2 text-xl text-white font-bold">Scholarship</div>
       </div>
-      <img src={JeetFoundationLogo} className="my-8 mx-auto h-10" alt=""/>
+      <img src={isDark ? JeetFoundationLogo : JeetFoundationDarkLogo} className="my-8 mx-auto h-10" alt=""/>
       <div className="hide-scrollbar flex-1">
         <div className="profile-card my-6 p-0 overflow-hidden">
           <div className="p-6">
@@ -157,23 +136,30 @@ export default function FormScreen() {
               <PhoneIcon className="text-black bg-green-400 rounded-2xl p-1" />
               <div className="text-sm font-medium dark:text-white justify-self-start px-2">
                 <div className="text-xs text-gray-500 dark:text-gray-500">Phone Number</div>
-                <div>{formUser.phone_number}</div>
+                <div>+91 {formUser.phone_number}</div>
               </div>
             </div>
             <div className="flex items-center mt-3">
-              <SchoolIcon className="text-white bg-blue-500 rounded-2xl p-1" />
+              <EmailOutlined className="text-white bg-cyan-600 rounded-2xl p-1" />
+              <div className="text-sm font-medium dark:text-white justify-self-start px-2">
+                <div className="text-xs text-gray-500 dark:text-gray-500">Email</div>
+                <div>{formUser.email}</div>
+              </div>
+            </div>
+            {formUser.school_name && <div className="flex items-center mt-3">
+              <SchoolIcon className="text-white bg-blue-500 rounded-2xl p-1"/>
               <div className="text-sm font-medium dark:text-white justify-self-start px-2">
                 <div className="text-xs text-gray-500 dark:text-gray-500">School</div>
                 <div>{formUser.school_name}</div>
               </div>
-            </div>
-            <div className="flex items-center mt-3">
-              <CakeIcon className="text-white bg-orange-500 rounded-2xl p-1" />
+            </div>}
+            {formUser.date_of_birth && <div className="flex items-center mt-3">
+              <CakeIcon className="text-white bg-orange-500 rounded-2xl p-1"/>
               <div className="text-sm font-medium dark:text-white justify-self-start px-2">
                 <div className="text-xs text-gray-500 dark:text-gray-500">Date of Birth</div>
                 <div>{formUser.date_of_birth}</div>
               </div>
-            </div>
+            </div>}
             <div className="flex items-center mt-3">
               <ReceiptIcon className="text-white bg-cyan-500 rounded-2xl p-1" />
               <div className="text-sm font-medium dark:text-white justify-self-start px-2">

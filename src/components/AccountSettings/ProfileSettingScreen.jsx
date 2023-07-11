@@ -12,34 +12,29 @@ import {UserContext} from "../../context/UserContext";
 import {ThemeContext} from "../../context/ThemeContext";
 import {auth, db} from "../../config";
 import Loader from "../Loader";
-import {wait} from "../../helpers";
+import {openPrivacyPolicy, openTermsOfService, wait} from "../../helpers";
 import {updateProfileImage} from "../../database";
+import Lottie from 'lottie-react-web';
+import tickLottie from '../../assets/lottie/tick-animated.json';
 
 const defaultPic = 'https://lh3.googleusercontent.com/a/AGNmyxaNQYQ0bte8Vz4NkpY7FX_oalIkGPue0dfhwbi7=s96-c'
 
 export default function ProfileSettingScreen({handleBack, goToPhoneScreen}) {
-  const [themeRange, setThemeRange] = useState(1);
   const [user, setUser] = useContext(UserContext).user;
   const [isDark, setIsDark] = useContext(ThemeContext).isDark;
   const [name, setName] = useState(() => user?.name ?? '');
   const [nameFocused, setNameFocused] = useState(false);
   const nameFocusedRef = useRef(false);
+  const nameInputRef = useRef(null);
   const [updatingName, setUpdatingName] = useState(false);
   const [profileImage, setProfileImage] = useState(() => user?.profile_url);
+  const [showTick, setShowTick] = useState(false);
 
   useEffect(() => {
     if(!nameFocusedRef.current) {
       setName(user?.name);
     }
   }, [user?.name]);
-
-  useEffect(() => {
-    if(themeRange < 1) {
-      setIsDark(false);
-    } else {
-      setIsDark(true);
-    }
-  }, [themeRange])
 
   const resizeProfilePic = (file) =>
     new Promise((resolve) => {
@@ -90,8 +85,21 @@ export default function ProfileSettingScreen({handleBack, goToPhoneScreen}) {
     }
   };
 
+  const handleUpdateName = async () => {
+    setUpdatingName(true);
+    await wait(500);
+    await db.collection('users').doc(user?.uid)
+      .set({
+        name
+      }, {merge: true})
+    setShowTick(true);
+    await wait(1700);
+    setShowTick(false)
+    setUpdatingName(false);
+  }
+
   return (
-    <div className="w-full h-full">
+    <div className="w-full h-full font-sans">
       <div className="flex justify-between px-3 py-1">
         <div className="flex items-center">
           <ArrowBackIos style={{cursor: 'pointer'}} className="text-zinc-900 dark:text-white" onClick={() => {
@@ -118,18 +126,14 @@ export default function ProfileSettingScreen({handleBack, goToPhoneScreen}) {
         <div className="flex items-center w-full">
           <p className="w-24 text-xs font-normal text-zinc-900 dark:text-white text-opacity-50 px-4">Name</p>
           <div className="flex items-center justify-between h-full flex-1 border-b border-neutral-100 dark:border-zinc-700 py-2 pr-3">
-            <input className="flex-1 border-none text-sm text-gray-700 dark:text-white bg-transparent font-normal" onBlur={e => nameFocusedRef.current =false} onFocus={e => nameFocusedRef.current = true} value={name} onChange={e => setName(e.target.value.trim())} type="text"/>
-            {name === user?.name ?
-            <Edit style={{fontSize: '17px'}} className="bg-cyan-500 text-white p-1 rounded-full" /> :
-              updatingName ? <Loader className="flex-grow-0 mr-2" /> : <p onClick={async () => {
-              setUpdatingName(true);
-              await wait(800);
-              await db.collection('users').doc(user?.uid)
-                .set({
-                  name
-                }, {merge: true})
-              setUpdatingName(false);
-            }} className="text-xs font-medium text-cyan-500 cursor-pointer">Update</p>}
+            <input ref={nameInputRef} className="flex-1 pointer-events-none border-none text-sm text-gray-700 dark:text-white bg-transparent font-normal" onBlur={e => nameFocusedRef.current =false} onFocus={e => nameFocusedRef.current = true} value={name} onChange={e => setName(e.target.value)} type="text"/>
+            {showTick && <div className="tick-animation">
+              <Lottie
+                style={{width: '10px', height: '10px', position: 'relative'}}
+                options={{ animationData: tickLottie, loop: false }} />
+            </div>}
+            {(!showTick && !updatingName && (name === user?.name ? <Edit onClick={() => nameInputRef.current.focus()} style={{fontSize: '17px'}} className="bg-cyan-500 text-white p-1 rounded-full cursor-pointer" /> : <p onClick={handleUpdateName} className="text-xs font-medium text-cyan-500 cursor-pointer">Update</p>))}
+            {!showTick && updatingName && <Loader className="flex-grow-0 mr-2" />}
           </div>
         </div>
         <div className="flex items-center w-full">
@@ -148,7 +152,13 @@ export default function ProfileSettingScreen({handleBack, goToPhoneScreen}) {
         <div className="flex items-center w-full my-3">
           <p className="w-24 text-xs font-normal text-zinc-900 dark:text-white text-opacity-50 px-4">Theme</p>
           <div className="flex flex-col justify-between h-full flex-1 border-b border-neutral-100 dark:border-zinc-700 py-4 pr-3">
-            <input id="minmax-range" type="range" min="0" max="1" value={themeRange} onChange={e => setThemeRange(e.target.value)} className="w-full h-0.5 bg-gray-100 rounded-lg appearance-none cursor-pointer dark:bg-gray-700" />
+            <input id="minmax-range" type="range" min="0" max="1" value={isDark ? 1 : 0} onChange={e => {
+              if(e.target.value < 1) {
+                setIsDark(false);
+              } else {
+                setIsDark(true);
+              }
+            }} className="!border-none w-full h-0.5 bg-gray-100 rounded-lg appearance-none cursor-pointer dark:bg-gray-700 " />
             <div className="flex justify-between mt-2">
               <WbSunnyIcon style={{fontSize: '12px'}} className="text-zinc-900 dark:text-gray-400" />
               <Brightness4Icon style={{fontSize: '12px'}} className="text-zinc-900 dark:text-gray-400" />
@@ -162,11 +172,11 @@ export default function ProfileSettingScreen({handleBack, goToPhoneScreen}) {
         </div>
         <hr className="mt-2 h-0.5 border-t-0 bg-neutral-100 dark:bg-zinc-700 opacity-100 dark:opacity-50"/>
         <div className="flex justify-center items-center my-3">
-          <p className="text-xs font-normal text-zinc-900 dark:text-white text-opacity-60">Terms of service</p>
+          <p onClick={openTermsOfService} className="text-xs font-normal text-zinc-900 dark:text-white text-opacity-60 cursor-pointer">Terms of service</p>
           <div className="w-1 h-1 bg-gray-500 rounded-full mx-2" />
-          <p className="text-xs font-normal text-zinc-900 dark:text-white text-opacity-60">Privacy Policy</p>
+          <p onClick={openPrivacyPolicy} className="text-xs font-normal text-zinc-900 dark:text-white text-opacity-60 cursor-pointer">Privacy Policy</p>
           <div className="w-1 h-1 bg-gray-500 rounded-full mx-2" />
-          <p className="text-xs font-normal text-zinc-900 dark:text-white text-opacity-60">Delete Account</p>
+          <p className="text-xs font-normal text-zinc-900 dark:text-white text-opacity-60 cursor-pointer">Delete Account</p>
         </div>
       </div>
     </div>

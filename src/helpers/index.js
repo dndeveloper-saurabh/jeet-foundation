@@ -104,3 +104,7 @@ export const refundAndCancellationPolicy =
   "https://firebasestorage.googleapis.com/v0/b/avian-display-193502.appspot.com/o/legal%2FRefund%20Policy.pdf?alt=media&token=b75e6bbb-91d4-47fd-9fb4-e1c63ab40e7e"
 
 export const wait = time => new Promise((res) => setTimeout(res, time));
+
+export const openTermsOfService = () => window.open(window.location.origin + '/terms_of_service', '_blank');
+
+export const openPrivacyPolicy = () => window.open(window.location.origin + '/privacy_policy', '_blank');

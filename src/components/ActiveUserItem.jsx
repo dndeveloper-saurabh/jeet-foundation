@@ -2,7 +2,7 @@ import React from 'react';
 import ArrowForwardIosIcon from '@material-ui/icons/ArrowForwardIos';
 import {randomAvatar} from "../helpers";
 
-export default function ActiveUserItem({shimmer, defaultPic, title, subTitle, onClick}) {
+export default function ActiveUserItem({shimmer, defaultPic, title, subTitle, onClick, timeSpent}) {
 
   if(shimmer) {
     return (

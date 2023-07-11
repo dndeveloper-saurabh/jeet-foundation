@@ -3,6 +3,7 @@ import Login from "../components/Login";
 import Layout from "../components/Layout";
 import Dashboard from "../components/Dashboard";
 import {UserContext} from "../context/UserContext";
+import Loader from "../components/Loader";
 
 export default function Admin() {
   const [user, setUser] = useContext(UserContext).user;
@@ -21,7 +22,12 @@ export default function Admin() {
 
   return (
     <>
-      {(!user || (user && !allowLoggedInUser)) &&
+      {user === false && <Layout>
+        <div className="bg-white dark:bg-zinc-900 w-screen h-screen flex justify-center items-center">
+          <Loader style={{zoom: 3}} />
+        </div>
+      </Layout>}
+      {(user === null || (user && !allowLoggedInUser)) &&
         <Layout>
           <Login />
         </Layout>}

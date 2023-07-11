@@ -38,7 +38,7 @@ export default function Navbar() {
       <img onClick={() => {
         history.push('/')
       }} className="h-16 mr-3 cursor-pointer" src={isDark ? whiteLogo : colorLogo} alt="Pustack Scholarships"/>
-      {auth.currentUser && user && <img onClick={e => setAnchorEl(e.currentTarget)} className="w-6 h-6 rounded-full overflow-hidden border border-gray-400 cursor-pointer" src={user?.profile_url}  alt={"user"}/>}
+      {auth.currentUser && user && <img onClick={e => setAnchorEl(e.currentTarget)} className="w-9 h-9 shadow object-cover rounded-full overflow-hidden border border-gray-400 cursor-pointer" src={user?.profile_url}  alt={"user"}/>}
       <Menu
         id={isDark ? "dark-menu" : "light-menu"}
         anchorEl={anchorEl}
@@ -56,6 +56,9 @@ export default function Navbar() {
           index={activeTab}
           onChangeIndex={(e) => setActiveTab(e)}
           scrolling={"false"}
+          containerStyle={{
+            transition: 'transform 0.35s cubic-bezier(0.15, 0.3, 0.25, 1) 0s'
+          }}
           ignoreNativeScroll={true}
           disabled={true}
           style={{height: '100%'}}

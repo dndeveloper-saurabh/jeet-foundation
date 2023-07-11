@@ -7,6 +7,7 @@ import {useMediaQuery} from "react-responsive";
 import whiteLogo from "../assets/images/auth/pustack_tutor_white_logo.png";
 import woman from "../assets/images/auth/woman.svg";
 import {auth} from "../config";
+import {openPrivacyPolicy, openTermsOfService} from "../helpers";
 
 export default function Login() {
   const [allowedLoggedInUser, setAllowLoggedInUser] = useContext(UserContext).allowedLoggedInUser;
@@ -99,17 +100,9 @@ export default function Login() {
             <div className="bottom">
               <img src={whiteLogo} alt=""/>
               <div className="bottom-group">
-                  <span className="cursor-pointer" onClick={() => {
-                    // setDocumentToShow(termsOfService);
-                    // setShowPDF(true);
-                    window.open(window.location.origin + '/terms_of_service', '_blank');
-                  }}>Terms of Service</span>
+                  <span className="cursor-pointer" onClick={openTermsOfService}>Terms of Service</span>
                 <div className="separator" />
-                <span className="cursor-pointer" onClick={() => {
-                  // setDocumentToShow(privacyPolicy);
-                  // setShowPDF(true);
-                  window.open(window.location.origin + '/privacy_policy', '_blank');
-                }}>Privacy Policy</span>
+                <span className="cursor-pointer" onClick={openPrivacyPolicy}>Privacy Policy</span>
               </div>
             </div>
           </div>

@@ -5,7 +5,7 @@ export const UserContext = createContext();
 export const UserContextProvider = (props) => {
   //------------------------------------ constants hooks
 
-  const [user, setUser] = useState(null);
+  const [user, setUser] = useState(false);
   const [allowedLoggedInUser, setAllowLoggedInUser] = useState(null);
   const [approved, setApproved] = useState(null);
   const [rejected, setRejected] = useState(null);

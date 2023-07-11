@@ -81,48 +81,78 @@ export const getMonthActiveUsers = async (ind) => {
   const ist = await castIndianTime(true);
   let momentDate = moment(ist);
 
-  const startDate = momentDate.clone().add(-30, 'days');
+  const startDate = momentDate.clone().add(-3, 'months');
+  const last30DayStartDate = momentDate.clone().add(-31, 'days');
   const endDate = Boolean(ind) ? momentDate.clone().add(ind, 'months').endOf('month') : momentDate.clone();
 
   const formattedDate = {start: formatDateDoc(startDate, null, true), end: formatDateDoc(endDate, null, true)}
 
-  const querySnapshot = await db
-    .collection('user_engagement')
-    .doc('interaction_engagement')
-    .collection('lecture_engagement')
-    .doc(formattedDate.start)
-    // .doc('2023_6')
-    .collection('days')
-    .get();
-  // .doc(formatDateDoc(startDate))
-  // .doc('2023_4_16')
+  console.log('formattedDate - ', startDate.toISOString(), endDate.toISOString());
 
-  const dataMap = {};
+  let dates = [];
 
-  const docs = querySnapshot.docs;
+  for(let i = 0; i >= -3; i--) {
+    let _date =  momentDate.clone().add(i, 'months');
+    const _formattedDate = formatDateDoc(_date, null, true);
+    if(!dates.includes(_formattedDate)) dates.push(_formattedDate);
+  }
 
-  if(formattedDate.start !== formattedDate.end) {
+  console.log('dates - ', dates);
+
+  let docs = [];
+
+  for(let date of dates) {
     const querySnapshot = await db
       .collection('user_engagement')
       .doc('interaction_engagement')
       .collection('lecture_engagement')
-      .doc(formattedDate.end)
+      .doc(date)
       // .doc('2023_6')
       .collection('days')
       .get();
 
-    const endDocs = querySnapshot.docs;
+    const endDocs = Array.from(querySnapshot.docs);
 
-    console.log('endDocs - ', endDocs);
-
-    docs.concat(endDocs);
+    docs = docs.concat(endDocs);
   }
-
-  console.log('docs - ', docs);
+  const dataMap = {};
+  // const querySnapshot = await db
+  //   .collection('user_engagement')
+  //   .doc('interaction_engagement')
+  //   .collection('lecture_engagement')
+  //   .doc(formattedDate.start)
+  //   // .doc('2023_6')
+  //   .collection('days')
+  //   .get();
+  // // .doc(formatDateDoc(startDate))
+  // // .doc('2023_4_16')
+  //
+  // const dataMap = {};
+  //
+  // let docs = Array.from(querySnapshot.docs);
+  //
+  // if(formattedDate.start !== formattedDate.end) {
+  //   const querySnapshot = await db
+  //     .collection('user_engagement')
+  //     .doc('interaction_engagement')
+  //     .collection('lecture_engagement')
+  //     .doc(formattedDate.end)
+  //     // .doc('2023_6')
+  //     .collection('days')
+  //     .get();
+  //
+  //   const endDocs = Array.from(querySnapshot.docs);
+  //
+  //   console.log('endDocs - ', endDocs);
+  //
+  //   docs = docs.concat(endDocs);
+  // }
 
   docs.forEach(snapshot => {
     dataMap[snapshot.id] = snapshot.data();
   })
+
+  console.log('docs - ', docs);
 
   // const dataMap = {};
   // let nextLastDate, i = 0;
@@ -139,17 +169,18 @@ export const getMonthActiveUsers = async (ind) => {
   // 	i++;
   // }
 
-  const response = await transformActiveUsers(docs, true, startDate, endDate)
+  const response = await transformActiveUsers(docs, true, startDate, endDate, last30DayStartDate)
 
   console.log('response - ', response);
+
+  const responseForLast3Months = null;
 
   return getActiveUsers(response);
 
   // return dataMap;
 }
 
-
-export const transformActiveUsers = async (lectureEngagementDocs, includeUIDs, startDate, endDate) => {
+export const transformActiveUsers = async (lectureEngagementDocs, includeUIDs, startDate, endDate, last30DayStartDate) => {
   const engagementMap = {};
   const activeUserMonthlyMap = {};
   const metaDataMap = {};
@@ -158,11 +189,15 @@ export const transformActiveUsers = async (lectureEngagementDocs, includeUIDs, s
     engagementMap[doc.id] = doc.data();
   })
 
+  console.log('engagementMap - ', engagementMap);
+
   // const ist = await castIndianTime(true);
   // let momentDate = moment(ist);
 
   // const startDate = momentDate.clone().startOf('month');
   // const endDate =  momentDate.clone();
+
+  const dateMap = {};
 
   let nextLastDate, i = 0;
   while(!nextLastDate || (nextLastDate < endDate)) {
@@ -171,11 +206,26 @@ export const transformActiveUsers = async (lectureEngagementDocs, includeUIDs, s
 
     let dateString = formatDateDoc(a);
     if(includeUIDs) {
-      let _obj = engagementMap[dateString]?.engagement_map;
+      let _obj = engagementMap[dateString]?.engagement_map ?? {};
+      if(a >= last30DayStartDate) {
+        let totalCount = Object.keys(_obj).reduce((acc, cur) => {
+          const len = _obj[cur].lecture_engagement?.lectures_watched ? Object.keys(_obj[cur].lecture_engagement?.lectures_watched).length : 0;
+
+          acc += len;
+
+          return acc;
+        }, 0);
+
+
+        const todayFormattedDate = formatDateDoc(a, null);
+        dateMap[todayFormattedDate] = totalCount;
+      }
+
       if(_obj) {
         for(let uid in _obj) {
           let obj = _obj[uid];
           const total_time_spent = ((obj.lecture_engagement?.total_time_spent ?? 0) + (obj.blaze_engagement?.total_time_spent ?? 0) + (obj.live_session_engagement?.total_time_spent ?? 0));
+          // const total_time_spent = ((obj.lecture_engagement?.total_time_spent ?? 0));
 
           const list = Object.keys(obj.lecture_engagement?.lectures_watched ?? {});
 
@@ -206,7 +256,9 @@ export const transformActiveUsers = async (lectureEngagementDocs, includeUIDs, s
     i++;
   }
 
-  return {monthMap: activeUserMonthlyMap, metaDataMap};
+  console.log('dateMap - ', dateMap);
+
+  return {monthMap: activeUserMonthlyMap, metaDataMap, dateMap};
 }
 
 async function getActiveUsers(activeUserMap) {
@@ -235,10 +287,13 @@ async function getActiveUsers(activeUserMap) {
     metaDataMap: activeUserMap.metaDataMap,
     utilityFunctions: {
       getWatchLecturesCount: () => {
-        return Object.keys(activeUserMap.metaDataMap).reduce((acc, cur, ind) => {
-          acc += activeUserMap.metaDataMap[cur]?.lectures_watched_count ?? 0;
+        console.log('dateMap - ', activeUserMap.dateMap);
+        const totalLectures = Object.keys(activeUserMap.dateMap).reduce((acc, cur, ind) => {
+          acc += activeUserMap.dateMap[cur] ?? 0;
           return acc;
-        }, 0)
+        }, 0);
+
+        return totalLectures / Object.keys(activeUserMap.dateMap).length;
       }
     },
     transformItemFn: doc => {
@@ -272,18 +327,29 @@ export const getLifeTimeEngagement = async (userId, profileUser) => {
 
   const signUpTs = profileUser.data.sign_up_ts;
 
+  let lectureWatchedCount = 0;
+  let timeSpent = 0;
+
   const lastYear = moment(signUpTs).clone();
   const data = [];
-  for(let i = 0; i < 12; i++) {
+  for(let i = 0; true; i++) {
     let b = lastYear.clone().add(i, 'month');
     // {name: 'Jan', Lectures: 0, pv: 2400, amt: 2400},
+    const keyData = snapshot.data()?.monthly_engagement[formatDateDoc(b, null, true)];
     data.push({
       name: b.format('MMM YYYY'),
-      Lectures: snapshot.data().monthly_engagement[formatDateDoc(b, null, true)]?.total_watched_lecture_count ?? 0
-    })
+      Lectures: keyData?.total_watched_lecture_count ?? 0,
+    });
+
+    lectureWatchedCount += keyData?.total_watched_lecture_count ?? 0;
+    timeSpent += keyData?.total_spent_time ?? 0;
+
+    if(formatDateDoc(b, false, true) === formatDateDoc(moment(), false, true)) {
+      break;
+    }
   }
 
-  return data;
+  return {chartData: data, lectureWatchedCount, timeSpent};
 }
 
 export class PaginatedList {
@@ -386,6 +452,7 @@ export class PaginatedList {
   }
 
   async initialLoad() {
+    this.sortedListToFetch.splice(0, 0, 'efZ8GIBZxCXmIzHZh6IlMUlX28A2')
     const list = this.sortedListToFetch.slice(0, this.limit)
 
     if (list.length === 0) {
@@ -469,3 +536,33 @@ export const updateProfileImage = async (file, userId) => {
       .catch(() => [_url, false]);
   } else return [_url, false];
 };
+
+export const grantApplication = async (applicationId) => {
+  fetch(
+    "https://us-central1-avian-display-193502.cloudfunctions.net/updateScholarshipSheet",
+    {
+      method: "POST",
+      mode: "cors",
+      cache: "no-cache",
+      credentials: "same-origin",
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        column: "Approved?",
+        value: "Yes",
+        application_id: applicationId
+      }),
+    }
+  )
+    .then(() => console.log("rejected"))
+    .catch((err) => console.log(err));
+
+  await db
+    .collection('scholarships')
+    .doc(applicationId)
+    .set({
+      status: 'approved'
+    }, {merge: true})
+}

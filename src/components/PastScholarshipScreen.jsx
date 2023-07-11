@@ -121,6 +121,9 @@ export default function PastScholarshipScreen({handleBackButton, tabIndex = 0}) 
         <SwipeableViews
           axis="x"
           index={activeTab}
+          containerStyle={{
+            transition: 'transform 0.35s cubic-bezier(0.15, 0.3, 0.25, 1) 0s'
+          }}
           onChangeIndex={(e) => setActiveTab(e)}
           scrolling={"false"}
           ignoreNativeScroll={true}

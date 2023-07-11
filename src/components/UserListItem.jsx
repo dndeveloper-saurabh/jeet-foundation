@@ -83,7 +83,7 @@ const BlazeCardBgDark = ({ color1, color2, sessionId }) => {
   );
 };
 
-export default function UserListItem({item, containerClassName, _src, title, subTitle, onItemClick}) {
+export default function UserListItem({item, containerClassName, _src, title, subTitle, onItemClick, timeSpent}) {
   const [, setFormUser] = useContext(UserContext).formUser;
   const [, setMainActiveTab] = useContext(UserContext).activeTab;
   const [src, setSrc] = useState(_src);
@@ -112,11 +112,11 @@ export default function UserListItem({item, containerClassName, _src, title, sub
       });
     }}>
       <div className="pustack-give-gradient-list-item-bg">
-        <BlazeCardBgDark
-          color1={'#00b899'}
-          color2={'#58e0bb'}
-          sessionId={'fsdf'}
-        />
+        {/*<BlazeCardBgDark*/}
+        {/*  color1={'#00b899'}*/}
+        {/*  color2={'#58e0bb'}*/}
+        {/*  sessionId={'fsdf'}*/}
+        {/*/>*/}
       </div>
       <div className="pustack-give-gradient-list-item-content px-4 justify-items-center items-center">
         {src ? <div className="pustack-give-gradient-list-item-image">

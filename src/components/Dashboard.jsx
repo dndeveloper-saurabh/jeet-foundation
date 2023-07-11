@@ -17,6 +17,7 @@ import SwipeableViews from "react-swipeable-views-react-18-fix";
 import {getClassName, randomAvatar} from "../helpers";
 import ActiveUsersScreen from "./ActiveUsersScreen";
 import NumberMeter from "./NumberMeter";
+import InfoIcon from '@material-ui/icons/Info';
 
 const defaultPic = 'https://lh3.googleusercontent.com/a/AGNmyxaNQYQ0bte8Vz4NkpY7FX_oalIkGPue0dfhwbi7=s96-c'
 
@@ -106,7 +107,7 @@ export default function Dashboard() {
           <h2 className="text-5xl font-bold mr-4">{review.length}</h2>
           <div className="flex-1">
             <h4 className="text-lg font-medium">Scholarships</h4>
-            <h6 className="text-sm text-gray-500 dark:text-gray-400">Awaiting Review</h6>
+            <h6 className="text-sm text-gray-400 dark:text-gray-400">Awaiting Review</h6>
           </div>
           <div className="rounded-full bg-green-600 py-2 px-6 cursor-pointer" onClick={() => {
             setShowDrawer(<UnderReviewScreen handleBackButton={() => setShowDrawer(null)} />)
@@ -139,16 +140,28 @@ export default function Dashboard() {
               return item && item.grade && <ActiveUserItem onClick={() => {
                 console.log('item - ', item);
                 setFormUser(() => {
-                  setProfileUser(() => {
-                    setActiveTab(() => {
-                      setShowDrawer(activeUsersScreen)
-                      return 1;
-                    });
-                    return item;
+                  setShowDrawer(() => {
+                    return (
+                      <ProfileScreen user={item} handleBackButton={() => {
+                        if(showDrawer) {
+                          setActiveTab(0);
+                        } else {
+                          setActiveTab(0);
+                          setShowDrawer(null);
+                        }
+                      }} />
+                    )
                   })
+                  // setProfileUser(() => {
+                  //   setActiveTab(() => {
+                  //     setShowDrawer(activeUsersScreen)
+                  //     return 1;
+                  //   });
+                  //   return item;
+                  // })
                   return null;
                 })
-              }} item={item.data} defaultPic={item.image} title={item.name} subTitle={getClassName(item.grade)} />
+              }} item={item.data} timeSpent={item.time_spent} defaultPic={item.image} title={item.name} subTitle={getClassName(item.grade)} />
             }) : [1,2,3,4,5,6,7,8,9,10].map(() => <ActiveUserItem shimmer />)}
           </div>
         </div>
@@ -171,6 +184,9 @@ export default function Dashboard() {
         <SwipeableViews
           axis="x"
           index={activeTab}
+          containerStyle={{
+            transition: 'transform 0.35s cubic-bezier(0.15, 0.3, 0.25, 1) 0s'
+          }}
           onChangeIndex={(e) => setActiveTab(e)}
           scrolling={"false"}
           ignoreNativeScroll={true}

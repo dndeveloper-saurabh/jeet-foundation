@@ -36,7 +36,7 @@ export default function ActiveUsersScreen({handleBackButton, fetchMore = () => {
 
   useEffect(() => {
     if(visible) fetchMore();
-  }, [visible])
+  }, [visible]);
 
   return (
     <div className="flex flex-col h-full">
@@ -48,7 +48,7 @@ export default function ActiveUsersScreen({handleBackButton, fetchMore = () => {
         {activeUsers?.map((item) => {
 
           return item && item.grade && (
-            <UserListItem item={item} containerClassName="mb-2" src={item.profile_url} title={item.name} subTitle={getClassName(item.grade)} onItemClick={(item) => {
+            <UserListItem item={item} timeSpent={item.time_spent} containerClassName="mb-2" src={item.profile_url} title={item.name} subTitle={getClassName(item.grade)} onItemClick={(item) => {
               setFormUser(() => {
                 setProfileUser(() => {
                   setActiveTab(1);
