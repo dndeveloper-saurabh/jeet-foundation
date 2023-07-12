@@ -5,6 +5,7 @@ import {UserContext} from "../context/UserContext";
 import {getClassName} from "../helpers";
 import {isVisible} from "@testing-library/user-event/dist/utils";
 import Loader from "./Loader";
+import ProfileScreen from "./ProfileScreen";
 
 const defaultPic = 'https://firebasestorage.googleapis.com/v0/b/avian-display-193502.appspot.com/o/users%2Fuser_profile%2Fdefault%2Fimage.jpg?alt=media&token=da277c04-0b39-49a3-8b90-4d6e93129a93'
 
@@ -14,6 +15,7 @@ export default function ActiveUsersScreen({handleBackButton, fetchMore = () => {
   const [visible, setIsVisible] = useState(false);
   const [, setActiveTab] = useContext(UserContext).activeTab;
   const [, setFormUser] = useContext(UserContext).formUser;
+  const [showDrawer, setShowDrawer] = useContext(UserContext).showDrawer;
   const [, setProfileUser] = useContext(UserContext).profileUser;
 
   console.log('noMore - ', noMore);

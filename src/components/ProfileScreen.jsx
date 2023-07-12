@@ -138,11 +138,16 @@ function ScholarshipCard({profileUser}) {
   return null;
 }
 
-export default function ProfileScreen({handleBackButton, user: profileUser}) {
-  // const [profileUser] = useContext(UserContext).profileUser;
+export default function ProfileScreen({handleBackButton, user}) {
+  const [_profileUser] = useContext(UserContext).profileUser;
+  const [profileUser, setProfileUser] = useState(user);
   const [chartData, setChartData] = useState([]);
   const [timeSpent, setTimeSpent] = useState(0);
   const [lectureWatchedCount, setLectureWatchedCount] = useState(0);
+
+  useEffect(() => {
+    if(!user && _profileUser) setProfileUser(_profileUser);
+  }, [user, _profileUser])
 
   useEffect(() => {
     if(!profileUser?.uid) return () => {};

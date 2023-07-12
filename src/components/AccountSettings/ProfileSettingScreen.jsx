@@ -99,7 +99,7 @@ export default function ProfileSettingScreen({handleBack, goToPhoneScreen}) {
   }
 
   return (
-    <div className="w-full h-full font-sans">
+    <div className="w-full h-full font-sans py-2">
       <div className="flex justify-between px-3 py-1">
         <div className="flex items-center">
           <ArrowBackIos style={{cursor: 'pointer'}} className="text-zinc-900 dark:text-white" onClick={() => {
