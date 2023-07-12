@@ -144,6 +144,7 @@ export default function ProfileScreen({handleBackButton, user}) {
   const [chartData, setChartData] = useState([]);
   const [timeSpent, setTimeSpent] = useState(0);
   const [lectureWatchedCount, setLectureWatchedCount] = useState(0);
+  const [fetching, setFetching] = useState(false);
 
   useEffect(() => {
     if(!user && _profileUser) setProfileUser(_profileUser);
@@ -151,11 +152,13 @@ export default function ProfileScreen({handleBackButton, user}) {
 
   useEffect(() => {
     if(!profileUser?.uid) return () => {};
+    setFetching(true);
     getLifeTimeEngagement(profileUser.uid, profileUser)
       .then(({chartData, timeSpent, lectureWatchedCount}) => {
         setChartData(chartData);
         setTimeSpent(timeSpent)
         setLectureWatchedCount(lectureWatchedCount);
+        setFetching(false);
       })
   }, [profileUser, profileUser?.uid])
 
@@ -195,14 +198,16 @@ export default function ProfileScreen({handleBackButton, user}) {
             <div className="flex items-center mt-3">
               <SchoolIcon className="text-black bg-lime-500 rounded-2xl p-1" />
               <div className="text-sm font-medium dark:text-white justify-self-start px-2">
-                <div>{lectureWatchedCount}</div>
+                {!fetching ? <div>{lectureWatchedCount}</div> :
+                <div className="animate-pulse w-10 h-4 mb-1 bg-zinc-300 dark:bg-zinc-600 rounded-full" />}
                 <div className="text-xs text-gray-500 dark:text-gray-500">Lectures Watched</div>
               </div>
             </div>
             <div className="flex items-center mt-3">
               <QueryBuilderIcon className="text-white bg-red-500 rounded-2xl p-1" />
               <div className="text-sm font-medium dark:text-white justify-self-start px-2">
-                <div>{humanizeTime(timeSpent)}</div>
+                {!fetching ? <div>{humanizeTime(timeSpent)}</div> :
+                <div className="animate-pulse w-20 h-4 mb-1 bg-zinc-300 dark:bg-zinc-600 rounded-full" />}
                 <div className="text-xs text-gray-500 dark:text-gray-500">Time Spent</div>
               </div>
             </div>
@@ -210,9 +215,9 @@ export default function ProfileScreen({handleBackButton, user}) {
         </div>
         <div className="profile-card my-6 p-4">
           <div className="text-gray-500 text-sm font-medium">Lectures Watched</div>
-          <div className="mt-5">
-            <Chart chartData={chartData} />
-          </div>
+          {fetching ? <div className="mt-5 h-[180px] animate-pulse bg-zinc-300 dark:bg-zinc-600 rounded" /> : <div className="mt-5">
+            <Chart chartData={chartData}/>
+          </div>}
         </div>
         <ScholarshipCard profileUser={profileUser} />
       </div>

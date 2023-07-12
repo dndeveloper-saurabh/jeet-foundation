@@ -53,8 +53,8 @@ export const formatDateDoc = (_date, dontIncMonth, withoutDate) => {
   return `${date.year}_${date.month + (dontIncMonth ? 0 : 1)}_${date.day ?? date.date}`;
 }
 
-export const fetchScholarships = async (props = {}) => {
-  const {status, limit, startAfter} = props;
+export const fetchScholarships = (props = {}) => {
+  const {status, limit, startAfter, cb} = props;
 
   let ref = db.collection('scholarships');
 
@@ -71,9 +71,10 @@ export const fetchScholarships = async (props = {}) => {
     ref = ref.limit(limit);
   }
 
-  const querySnapshot = await ref.get();
+  ref.onSnapshot((querySnapshot) => {
+    cb(querySnapshot.docs)
+  });
 
-  return querySnapshot.docs;
 }
 
 

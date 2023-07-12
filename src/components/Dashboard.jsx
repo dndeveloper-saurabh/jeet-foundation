@@ -36,6 +36,7 @@ export default function Dashboard() {
   const [lectureWatchedCount, setLectureWatchedCount] = useState(0);
   const paginatedList = useRef(null);
   const [noMore, setNoMore] = useState(false);
+  const [fetching, setFetching] = useState(false);
 
     useEffect(() => {
     setIsIpad(navigator.userAgent.match(/iPad/i) !== null);
@@ -45,8 +46,7 @@ export default function Dashboard() {
 
   useEffect(() => {
     if(showDrawer) return;
-    fetchScholarships()
-      .then(docs => {
+    fetchScholarships({cb: docs => {
         let approved = [];
         let rejected = [];
         let review = [];
@@ -65,7 +65,7 @@ export default function Dashboard() {
         setApproved(approved);
         setRejected(rejected);
         setReviewed(review);
-      })
+      }})
 
     getMonthActiveUsers(0).then(async (list) => {
       console.log('list - ', list);
@@ -81,7 +81,7 @@ export default function Dashboard() {
       const lectureCount = list.utilityFunctions.getWatchLecturesCount();
       setLectureWatchedCount(lectureCount);
     })
-  }, [showDrawer]);
+  }, []);
 
   useEffect(() => {
     if(!showDrawer) setActiveTab(0)
@@ -103,17 +103,19 @@ export default function Dashboard() {
   return review ? (
     <main className="text-white flex-1 bg-white dark:bg-zinc-900 overflow-hidden">
       <div className="grid h-full grid-rows-[95px_28px_95px_1fr] gap-5 px-6 lg:px-0 grid-cols-2 max-w-4xl mx-auto pt-10">
-        <div className="col-span-2 dashboard-card bg-zinc-700 flex items-center">
-          <h2 className="text-5xl font-bold mr-4">{review.length}</h2>
-          <div className="flex-1">
-            <h4 className="text-lg font-medium">Scholarships</h4>
-            <h6 className="text-sm text-gray-400 dark:text-gray-400">Awaiting Review</h6>
-          </div>
-          <div className="rounded-full bg-green-600 py-2 px-6 cursor-pointer" onClick={() => {
-            setShowDrawer(<UnderReviewScreen handleBackButton={() => setShowDrawer(null)} />)
-          }}>
-            <span className="font-bold">View</span>
-          </div>
+        <div className={"col-span-2 dashboard-card bg-zinc-700 flex items-center " + (fetching ? 'animate-pulse' : '')}>
+          {fetching ? null : <>
+            <h2 className="text-5xl font-bold mr-4">{review.length}</h2>
+            <div className="flex-1">
+              <h4 className="text-lg font-medium">Scholarships</h4>
+              <h6 className="text-sm text-gray-400 dark:text-gray-400">Awaiting Review</h6>
+            </div>
+            <div className="rounded-full bg-green-600 py-2 px-6 cursor-pointer" onClick={() => {
+              setShowDrawer(<UnderReviewScreen handleBackButton={() => setShowDrawer(null)}/>)
+            }}>
+              <span className="font-bold">View</span>
+            </div>
+          </>}
         </div>
         <h2 className="col-span-2 text-xl font-medium text-zinc-900 dark:text-white">Analytics</h2>
         <div className="dashboard-card py-0 px-4 flex flex-col justify-center cursor-pointer" onClick={() => {
@@ -122,11 +124,16 @@ export default function Dashboard() {
           <p className="text-blue-500 text-lg font-medium"><NumberMeter value={approved.length} /></p>
           <p className="text-sm text-gray-400 font-normal dark:text-gray-400">Scholarships Granted</p>
         </div>
-        <div className="dashboard-card py-0 px-4 flex flex-col justify-center">
-          <p className="text-red-500 text-lg font-medium">
-            <NumberMeter value={lectureWatchedCount} />
-          </p>
-          <p className="text-sm text-gray-400 font-normal dark:text-gray-400">Lectures Watched</p>
+        <div className={"dashboard-card py-0 px-4 flex flex-col justify-center"}>
+          {!activeUsers ? <>
+            <div className="animate-pulse w-10 h-7 mb-2.5 mt-1 bg-zinc-300 dark:bg-zinc-600 rounded-full" />
+            <div className="animate-pulse w-24 h-4 bg-zinc-300 dark:bg-zinc-600 rounded-full" />
+          </> : <>
+            <p className="text-red-500 text-lg font-medium">
+              <NumberMeter value={lectureWatchedCount}/>
+            </p>
+            <p className="text-sm text-gray-400 font-normal dark:text-gray-400">Lectures Watched</p>
+          </>}
         </div>
         <div className="col-span-2 overflow-hidden h-[calc(100%-2rem)] pb-2">
           <div className="flex items-center justify-between mb-5">
@@ -177,7 +184,7 @@ export default function Dashboard() {
         onClose={() => {setShowDrawer(null)}}
         ModalProps={{ keepMounted: true }}
         PaperProps={{className: 'w-96 h-screen px-4 py-6', style: {
-          backgroundColor: isDark ? '#18181b' : '#ffffff'
+          backgroundColor: isDark ? '#18181b' : 'rgb(246 246 246)'
           }}}
         // BackdropProps={{ style: { backgroundColor: "rgba(0, 0, 0, 0.75)" } }}
       >

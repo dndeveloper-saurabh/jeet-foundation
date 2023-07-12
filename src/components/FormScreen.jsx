@@ -71,8 +71,8 @@ function RescindButton({className, label, applicationId}) {
   }
 
   return (
-    <button className={"rounded-lg bg-gray-700 text-white w-full h-10 flex items-center " + (className ? className : '')} onClick={handleClick}>
-      {loading ? <Loader/> : <span className="font-bold text-white text-sm flex-1">{label ?? 'Rescind'}</span>}
+    <button className={"rounded-lg bg-gray-300 text-zinc-900 dark:text-white dark:bg-gray-700 w-full h-10 flex items-center " + (className ? className : '')} onClick={handleClick}>
+      {loading ? <Loader/> : <span className="font-bold text-sm flex-1">{label ?? 'Rescind'}</span>}
     </button>
   )
 }
@@ -118,7 +118,7 @@ export default function FormScreen() {
             return 0
           })
         }} />
-        <div className="flex-1 ml-2 text-xl text-white font-bold">Scholarship</div>
+        <div className="flex-1 ml-2 text-xl text-zinc-900 dark:text-white font-bold">Scholarship</div>
       </div>
       <img src={isDark ? JeetFoundationLogo : JeetFoundationDarkLogo} className="my-8 mx-auto h-10" alt=""/>
       <div className="hide-scrollbar flex-1">
@@ -139,13 +139,13 @@ export default function FormScreen() {
                 <div>+91 {formUser.phone_number}</div>
               </div>
             </div>
-            <div className="flex items-center mt-3">
-              <EmailOutlined className="text-white bg-cyan-600 rounded-2xl p-1" />
+            {formUser.email && <div className="flex items-center mt-3">
+              <EmailOutlined className="text-white bg-cyan-600 rounded-2xl p-1"/>
               <div className="text-sm font-medium dark:text-white justify-self-start px-2">
                 <div className="text-xs text-gray-500 dark:text-gray-500">Email</div>
                 <div>{formUser.email}</div>
               </div>
-            </div>
+            </div>}
             {formUser.school_name && <div className="flex items-center mt-3">
               <SchoolIcon className="text-white bg-blue-500 rounded-2xl p-1"/>
               <div className="text-sm font-medium dark:text-white justify-self-start px-2">
@@ -179,7 +179,7 @@ export default function FormScreen() {
               ))}
             </div>
           </div>
-          <div className="w-full bg-gray-200 dark:bg-gray-900 h-16 px-3 py-3 grid grid-cols-7 gap-2">
+          <div className="w-full bg-slate-50 border-t-1 dark:bg-zinc-800 h-16 px-3 py-3 grid grid-cols-7 gap-2">
             {buttons}
           </div>
         </div>
