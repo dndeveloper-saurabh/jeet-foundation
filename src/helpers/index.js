@@ -44,6 +44,7 @@ export const randomAvatar = (name) => {
 }
 
 export function humanizeTime(seconds) {
+  if(seconds === 0) return '0s';
   let obj = {
     h: 0,
     m: 0,
@@ -74,7 +75,6 @@ export function humanizeTime(seconds) {
       obj.s = seconds % 60;
     }
   }
-  console.log(formatHumanizeHas(obj));
   return formatHumanizeHas(obj);
 }
 

@@ -26,8 +26,15 @@ function ScholarshipCard({profileUser}) {
   const [granting, setGranting] = useState(false);
   const [showTick, setShowTick] = useState(false);
 
+  console.log('profileUser - ', profileUser);
+
   useEffect(() => {
     if(!profileUser?.uid) return () => {}
+
+    setGranted(false);
+    setInReview(false);
+    setNotApplied(false);
+
     db
       .collection('scholarships')
       .where('uid', '==', profileUser?.uid)
@@ -36,6 +43,7 @@ function ScholarshipCard({profileUser}) {
       .then(querySnapshot => {
         querySnapshot.docs.forEach(snapshot => {
           const data = snapshot.data();
+          console.log('profileUser - ', profileUser);
           if(data.status === 'approved') setGranted(data);
           if(data.status === 'under_review') setInReview(data);
         })
@@ -47,9 +55,10 @@ function ScholarshipCard({profileUser}) {
       .get()
       .then(querySnapshot => {
         if(querySnapshot.docs.length === 0) setNotApplied(true);
+        else setNotApplied(false)
       })
 
-  }, [profileUser?.uid]);
+  }, [profileUser, profileUser?.uid]);
 
   const handleGrantApplication = async () => {
     setGranting(true);
@@ -163,7 +172,7 @@ export default function ProfileScreen({handleBackButton, user}) {
   }, [profileUser, profileUser?.uid])
 
   return profileUser ? (
-    <div className="flex flex-col font-sans h-full">
+    <div className="flex flex-col font-sans h-full px-4">
       <ArrowBackIos style={{fontSize: '20px'}} className="cursor-pointer text-zinc-900 dark:text-white" onClick={handleBackButton} />
       <div className="font-medium dark:text-white justify-self-start px-2 text-center">
         <div className="w-32 h-32 overflow-hidden rounded-full mx-auto my-4">

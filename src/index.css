@@ -533,7 +533,7 @@ input[type=file]::-webkit-file-upload-button { /* chromes and blink button */
 }
 
 .review-screen .react-swipeable-view-container > div {
-  overflow: hidden !important;
+  overflow: hidden;
 }
 
 .react-pdf__Document {

@@ -1,4 +1,4 @@
-import React, {useMemo, useContext, useState} from 'react';
+import React, {useMemo, useContext, useEffect, useState} from 'react';
 import PhoneIcon from "@material-ui/icons/Phone";
 import ArrowBackIos from "@material-ui/icons/ArrowBackIos";
 import JeetFoundationLogo from '../assets/images/jeet-foundation-white.svg';
@@ -8,12 +8,14 @@ import SchoolIcon from '@material-ui/icons/School';
 import CakeIcon from '@material-ui/icons/Cake';
 import ReceiptIcon from '@material-ui/icons/Receipt';
 import {UserContext} from "../context/UserContext";
-import {getClassName} from "../helpers";
+import {getClassName, humanizeTime} from "../helpers";
 import Loader from "./Loader";
 import {db} from "../config";
 import {ThemeContext} from "../context/ThemeContext";
-import {grantApplication} from "../database";
+import {getLifeTimeEngagement, grantApplication} from "../database";
 import {EmailOutlined} from "@material-ui/icons";
+import QueryBuilderIcon from "@material-ui/icons/QueryBuilder";
+import Chart from "./Chart";
 
 function GrantButton({className, applicationId}) {
   const [loading, setLoading] = useState(false);
@@ -81,6 +83,27 @@ export default function FormScreen() {
   const [formUser, setFormUser] = useContext(UserContext).formUser;
   const [, setMainActiveTab] = useContext(UserContext).activeTab;
   const [isDark] = useContext(ThemeContext).isDark;
+  const [fetching, setFetching] = useState(false);
+  const [chartData, setChartData] = useState([]);
+  const [timeSpent, setTimeSpent] = useState(0);
+  const [lectureWatchedCount, setLectureWatchedCount] = useState(0);
+
+  useEffect(() => {
+    if(!formUser?.uid) return () => {};
+    setFetching(true);
+    db.doc('users/' + formUser?.uid)
+      .get()
+      .then(snapshot => {
+        const user = snapshot.data();
+        getLifeTimeEngagement(formUser.uid, {data: user})
+          .then(({chartData, timeSpent, lectureWatchedCount}) => {
+            setChartData(chartData);
+            setTimeSpent(timeSpent)
+            setLectureWatchedCount(lectureWatchedCount);
+            setFetching(false);
+          })
+      })
+  }, [formUser, formUser?.uid])
 
   const marksMap = useMemo(() => {
     console.log('formUser - ', formUser);
@@ -108,7 +131,7 @@ export default function FormScreen() {
   }
 
   return (
-    <div className="flex flex-col h-full font-sans">
+    <div className="flex flex-col h-full font-sans px-4">
       <div className="flex items-center text-white mb-3">
         <ArrowBackIos style={{fontSize: '18px'}} className="cursor-pointer text-zinc-900 dark:text-white" onClick={() => {
           setMainActiveTab(() => {
@@ -120,8 +143,8 @@ export default function FormScreen() {
         }} />
         <div className="flex-1 ml-2 text-xl text-zinc-900 dark:text-white font-bold">Scholarship</div>
       </div>
-      <img src={isDark ? JeetFoundationLogo : JeetFoundationDarkLogo} className="my-8 mx-auto h-10" alt=""/>
-      <div className="hide-scrollbar flex-1">
+      <div className="hide-scrollbar overflow-auto flex-1">
+        <img src={isDark ? JeetFoundationLogo : JeetFoundationDarkLogo} className="my-8 mx-auto h-10" alt=""/>
         <div className="profile-card my-6 p-0 overflow-hidden">
           <div className="p-6">
             <div className="text-gray-500 text-sm font-medium">Application Form</div>
@@ -179,10 +202,37 @@ export default function FormScreen() {
               ))}
             </div>
           </div>
-          <div className="w-full bg-slate-50 border-t-1 dark:bg-zinc-800 h-16 px-3 py-3 grid grid-cols-7 gap-2">
-            {buttons}
+        </div>
+        <div className="profile-card my-6 p-4">
+          <div className="text-gray-500 text-sm font-medium">Engagement</div>
+          <div>
+            <div className="flex items-center mt-3">
+              <SchoolIcon className="text-black bg-lime-500 rounded-2xl p-1" />
+              <div className="text-sm font-medium dark:text-white justify-self-start px-2">
+                {!fetching ? <div>{lectureWatchedCount}</div> :
+                  <div className="animate-pulse w-10 h-4 mb-1 bg-zinc-300 dark:bg-zinc-600 rounded-full" />}
+                <div className="text-xs text-gray-500 dark:text-gray-500">Lectures Watched</div>
+              </div>
+            </div>
+            <div className="flex items-center font-sans mt-3">
+              <QueryBuilderIcon className="text-white bg-red-500 rounded-2xl p-1" />
+              <div className="text-sm font-medium dark:text-white justify-self-start px-2">
+                {!fetching ? <div>{humanizeTime(timeSpent)}</div> :
+                  <div className="animate-pulse w-20 h-4 mb-1 bg-zinc-300 dark:bg-zinc-600 rounded-full" />}
+                <div className="text-xs text-gray-500 dark:text-gray-500">Time Spent</div>
+              </div>
+            </div>
           </div>
         </div>
+        <div className="profile-card my-6 p-4">
+          <div className="text-gray-500 text-sm font-medium">Timeline</div>
+          {fetching ? <div className="mt-5 h-[180px] animate-pulse bg-zinc-300 dark:bg-zinc-600 rounded" /> : <div className="mt-5">
+            <Chart chartData={chartData}/>
+          </div>}
+        </div>
+      </div>
+      <div className="w-full basis-[50px] bg-slate-50 border-t-1 dark:bg-zinc-800 h-16 px-3 py-3 grid grid-cols-7 gap-2">
+        {buttons}
       </div>
     </div>
   )

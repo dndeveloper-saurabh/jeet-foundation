@@ -1,7 +1,8 @@
-import {db, firebase, storage} from "../config";
+import {db, firebase, rdb, storage} from "../config";
 import {castIndianTime} from "../helpers/getIndianTime";
 import moment from 'moment';
 import { v4 as uuidv4 } from "uuid";
+import {humanizeTime} from "../helpers";
 
 export const getDateFromHash = (data) => {
   return new Date(data.year, data.month - 1, data.day, data.hour, data.minute);
@@ -453,11 +454,12 @@ export class PaginatedList {
   }
 
   async initialLoad() {
-    this.sortedListToFetch.splice(0, 0, 'efZ8GIBZxCXmIzHZh6IlMUlX28A2')
+    // this.sortedListToFetch.splice(0, 0, 'efZ8GIBZxCXmIzHZh6IlMUlX28A2')
     const list = this.sortedListToFetch.slice(0, this.limit)
 
-    if (list.length === 0) {
-      return (this.noMore = true)
+    if (list.length < this.limit) {
+      this.noMore = true;
+      if(list.length === 0) return;
     }
 
     await this.fetchList(list)
@@ -566,4 +568,65 @@ export const grantApplication = async (applicationId) => {
     .set({
       status: 'approved'
     }, {merge: true})
+}
+
+export const listenToOnlineUsers = (cb) => {
+  rdb.ref('/user_state/pustack_app/active_users').on('value', (snapshot) => {
+    const timeMap = snapshot.val();
+    console.log('timeMap - ', timeMap);
+    const sortedArr = Object.keys(timeMap).sort((a, b) => {
+      if (new Date(timeMap[a].update_time) < new Date(timeMap[b].update_time)) return 1
+      if (new Date(timeMap[a].update_time) > new Date(timeMap[b].update_time)) return -1
+      return 0
+    });
+
+    let list = new PaginatedList({
+      doc: {
+        collectionPath: "users",
+        where: arr => [firebase.firestore.FieldPath.documentId(), "in", arr]
+      },
+      sortedListToFetch: sortedArr,
+      limit: 10,
+      sortFunction: (a, b) => {
+        return 0;
+      },
+      // metaDataMap: activeUserMap.metaDataMap,
+      // utilityFunctions: {
+      //   getWatchLecturesCount: () => {
+      //     console.log('dateMap - ', activeUserMap.dateMap);
+      //     const totalLectures = Object.keys(activeUserMap.dateMap).reduce((acc, cur, ind) => {
+      //       acc += activeUserMap.dateMap[cur] ?? 0;
+      //       return acc;
+      //     }, 0);
+      //
+      //     return totalLectures / Object.keys(activeUserMap.dateMap).length;
+      //   }
+      // },
+      transformItemFn: doc => {
+        if(!doc.exists) return null;
+
+        const data = doc.data()
+
+        console.log('data - ', data.uid);
+
+        const duration = moment() - moment(timeMap[data.uid].update_time);
+        const formatted = humanizeTime(Math.round(duration / 1000));
+
+        return {
+          name: data.name,
+          phone: "+" + data.phone_country_code + " " + data.phone_number,
+          email: data.email,
+          grade: data.grade,
+          image: data.profile_url,
+          uid: data.uid,
+          // time_spent: activeUserMap.metaDataMap[data.uid]?.time_spent.total,
+          // watched_count: activeUserMap.metaDataMap[data.uid]?.lectures_watched_count,
+          online_since: +(new Date(timeMap[data.uid].update_time)),
+          data: data
+        }
+      }
+    })
+
+    cb(list);
+  })
 }

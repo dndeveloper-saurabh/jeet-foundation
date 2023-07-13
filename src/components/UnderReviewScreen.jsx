@@ -29,7 +29,7 @@ export default function UnderReviewScreen({handleBackButton, activeTabIndex = 0,
       style={{height: '100%'}}
       className="review-screen"
     >
-      <div className="flex flex-col h-full">
+      <div className="flex flex-col h-full px-4">
         <div className="flex items-center text-zinc-900 dark:text-white">
           <ArrowBackIos style={{fontSize: '18px'}} className="cursor-pointer" onClick={handleBackButton} />
           <div className="flex-1 ml-2 text-xl flowingText font-bold">Scholarships</div>
@@ -38,7 +38,7 @@ export default function UnderReviewScreen({handleBackButton, activeTabIndex = 0,
           }} />
         </div>
         <div className="[&>*]:mt-3 hide-scrollbar flex-1 mt-4 overflow-auto">
-          {review.map((item) => {
+          {review.sort((a, b) => b.applied_on - a.applied_on).map((item) => {
 
             return (
               <UserListItem item={item} containerClassName="mb-2" src={item.profile_url} title={item.first_name + " " + item.last_name} subTitle={getClassName(item.grade)}/>

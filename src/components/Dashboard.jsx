@@ -7,7 +7,7 @@ import ProfileScreen from "./ProfileScreen";
 import UnderReviewScreen from "./UnderReviewScreen";
 import PastScholarshipScreen from "./PastScholarshipScreen";
 import FormScreen from "./FormScreen";
-import {fetchScholarships, getMonthActiveUsers} from "../database";
+import {fetchScholarships, getMonthActiveUsers, listenToOnlineUsers} from "../database";
 import {UserContext} from "../context/UserContext";
 import {ThemeContext} from "../context/ThemeContext";
 import ArrowBackIos from "@material-ui/icons/ArrowBackIos";
@@ -35,8 +35,11 @@ export default function Dashboard() {
   const [activeUsers, setActiveUsers] = useContext(UserContext).activeUsers;
   const [lectureWatchedCount, setLectureWatchedCount] = useState(0);
   const paginatedList = useRef(null);
-  const [noMore, setNoMore] = useState(false);
+  const onlinePaginatedList = useRef(null);
+  const [noMoreActiveUsers, setNoMore] = useState(false);
+  const [noMoreOnlineUsers, setNoMoreOnlineUsers] = useState(false);
   const [fetching, setFetching] = useState(false);
+  const [, setOnlineUsers] = useContext(UserContext).onlineUsers;
 
     useEffect(() => {
     setIsIpad(navigator.userAgent.match(/iPad/i) !== null);
@@ -46,6 +49,25 @@ export default function Dashboard() {
 
   useEffect(() => {
     if(showDrawer) return;
+
+    listenToOnlineUsers(async (list) => {
+      console.log('list - ', list);
+
+      onlinePaginatedList.current = list;
+
+      await list.initialLoad();
+
+      await list.transformList();
+
+      console.log('list.transformedList - ', list.transformedList);
+
+      if(onlinePaginatedList.current?.noMore) {
+        setNoMoreOnlineUsers(true);
+      }
+
+      setOnlineUsers(list.transformedList);
+    });
+
     fetchScholarships({cb: docs => {
         let approved = [];
         let rejected = [];
@@ -70,7 +92,6 @@ export default function Dashboard() {
     getMonthActiveUsers(0).then(async (list) => {
       console.log('list - ', list);
       paginatedList.current = list;
-      window.paginatedList = list;
 
       await list.initialLoad();
 
@@ -98,7 +119,18 @@ export default function Dashboard() {
     await paginatedList.current?.transformList();
 
     setActiveUsers(paginatedList.current.transformedList);
-  }} noMore={noMore} handleBackButton={() => setShowDrawer(null)} />) : null;
+  }} fetchMoreOnlineUsers={async () => {
+    if(!onlinePaginatedList.current) return;
+    await onlinePaginatedList.current?.fetchMore();
+
+    if(onlinePaginatedList.current?.noMore) {
+      setNoMoreOnlineUsers(true);
+    }
+
+    await onlinePaginatedList.current?.transformList();
+
+    setOnlineUsers(onlinePaginatedList.current.transformedList);
+  }} noMoreActiveUsers={noMoreActiveUsers} noMoreOnlineUsers={noMoreOnlineUsers} handleBackButton={() => setShowDrawer(null)} />) : null;
 
   return review ? (
     <main className="text-white flex-1 bg-white dark:bg-zinc-900 overflow-hidden">
@@ -108,7 +140,7 @@ export default function Dashboard() {
             <h2 className="text-5xl font-bold mr-4">{review.length}</h2>
             <div className="flex-1">
               <h4 className="text-lg font-medium">Scholarships</h4>
-              <h6 className="text-sm text-gray-400 dark:text-gray-400">Awaiting Review</h6>
+              <h6 className="text-sm text-gray-400 dark:text-gray-400 text-dndeveloper-100">Awaiting Review</h6>
             </div>
             <div className="rounded-full bg-green-600 py-2 px-6 cursor-pointer" onClick={() => {
               setShowDrawer(<UnderReviewScreen handleBackButton={() => setShowDrawer(null)}/>)
@@ -183,7 +215,7 @@ export default function Dashboard() {
         // disableEscapeKeyDown={true}
         onClose={() => {setShowDrawer(null)}}
         ModalProps={{ keepMounted: true }}
-        PaperProps={{className: 'w-96 h-screen px-4 py-6', style: {
+        PaperProps={{className: 'w-96 h-screen py-6', style: {
           backgroundColor: isDark ? '#18181b' : 'rgb(246 246 246)'
           }}}
         // BackdropProps={{ style: { backgroundColor: "rgba(0, 0, 0, 0.75)" } }}

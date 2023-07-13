@@ -118,7 +118,7 @@ export default function ProfileSettingScreen({handleBack, goToPhoneScreen}) {
         </div>
         <div className="relative mt-4 !cursor-pointer">
           <input className="absolute w-full h-full z-20 !cursor-pointer opacity-0" type="file" accept="image/png, image/jpg, image/jpeg" onChange={profileImageSelectionHandler}/>
-          <p className="relative z-10 text-cyan-500 text-xs font-medium pointer-events-none">Change Profile Photo</p>
+          <p className="relative z-10 text-blueTheme-100 text-xs font-medium pointer-events-none">Change Profile Photo</p>
         </div>
       </div>
       <hr className="mt-4 h-0.5 border-t-0 bg-neutral-100 dark:bg-zinc-700 opacity-100 dark:opacity-50"/>
@@ -126,13 +126,13 @@ export default function ProfileSettingScreen({handleBack, goToPhoneScreen}) {
         <div className="flex items-center w-full">
           <p className="w-24 text-xs font-normal text-zinc-900 dark:text-white text-opacity-50 px-4">Name</p>
           <div className="flex items-center justify-between h-full flex-1 border-b border-neutral-100 dark:border-zinc-700 py-2 pr-3">
-            <input ref={nameInputRef} className="flex-1 pointer-events-none border-none text-sm text-gray-700 dark:text-white bg-transparent font-normal" onBlur={e => nameFocusedRef.current =false} onFocus={e => nameFocusedRef.current = true} value={name} onChange={e => setName(e.target.value)} type="text"/>
+            <input ref={nameInputRef} className="flex-1 border-none text-sm text-gray-700 dark:text-white bg-transparent font-normal" onBlur={e => nameFocusedRef.current =false} onFocus={e => nameFocusedRef.current = true} value={name} onChange={e => setName(e.target.value)} type="text"/>
             {showTick && <div className="tick-animation">
               <Lottie
                 style={{width: '10px', height: '10px', position: 'relative'}}
                 options={{ animationData: tickLottie, loop: false }} />
             </div>}
-            {(!showTick && !updatingName && (name === user?.name ? <Edit onClick={() => nameInputRef.current.focus()} style={{fontSize: '17px'}} className="bg-cyan-500 text-white p-1 rounded-full cursor-pointer" /> : <p onClick={handleUpdateName} className="text-xs font-medium text-cyan-500 cursor-pointer">Update</p>))}
+            {(!showTick && !updatingName && (name === user?.name ? <Edit onClick={() => nameInputRef.current.focus()} style={{fontSize: '17px'}} className="bg-blueTheme-100 text-white p-1 rounded-full cursor-pointer" /> : <p onClick={handleUpdateName} className="text-xs font-medium text-cyan-500 cursor-pointer">Update</p>))}
             {!showTick && updatingName && <Loader className="flex-grow-0 mr-2" />}
           </div>
         </div>
@@ -175,8 +175,8 @@ export default function ProfileSettingScreen({handleBack, goToPhoneScreen}) {
           <p onClick={openTermsOfService} className="text-xs font-normal text-zinc-900 dark:text-white text-opacity-60 cursor-pointer">Terms of service</p>
           <div className="w-1 h-1 bg-gray-500 rounded-full mx-2" />
           <p onClick={openPrivacyPolicy} className="text-xs font-normal text-zinc-900 dark:text-white text-opacity-60 cursor-pointer">Privacy Policy</p>
-          <div className="w-1 h-1 bg-gray-500 rounded-full mx-2" />
-          <p className="text-xs font-normal text-zinc-900 dark:text-white text-opacity-60 cursor-pointer">Delete Account</p>
+          {/*<div className="w-1 h-1 bg-gray-500 rounded-full mx-2" />*/}
+          {/*<p className="text-xs font-normal text-zinc-900 dark:text-white text-opacity-60 cursor-pointer">Delete Account</p>*/}
         </div>
       </div>
     </div>

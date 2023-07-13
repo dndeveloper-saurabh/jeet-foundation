@@ -3,6 +3,7 @@ import KeyboardArrowDownRoundedIcon from "@material-ui/icons/KeyboardArrowDownRo
 import {UserContext} from "../context/UserContext";
 import {randomAvatar} from "../helpers";
 import {db} from "../config";
+import ArrowForwardIosIcon from "@material-ui/icons/ArrowForwardIos";
 
 const BlazeCardBgDark = ({ color1, color2, sessionId }) => {
   return (
@@ -83,7 +84,7 @@ const BlazeCardBgDark = ({ color1, color2, sessionId }) => {
   );
 };
 
-export default function UserListItem({item, containerClassName, _src, title, subTitle, onItemClick, timeSpent}) {
+export default function UserListItem({item, containerClassName, _src, title, subTitle, onItemClick, notGradient, withTimer}) {
   const [, setFormUser] = useContext(UserContext).formUser;
   const [, setMainActiveTab] = useContext(UserContext).activeTab;
   const [src, setSrc] = useState(_src);
@@ -99,7 +100,28 @@ export default function UserListItem({item, containerClassName, _src, title, sub
           setSrc(data.profile_url);
         })
     }
-  }, [item.uid, src])
+  }, [item.uid, src]);
+
+  if(notGradient) {
+    return (
+      <div className={"grid py-3 border-b-1 grid-cols-[50px_minmax(100px,_1fr)_50px] items-center justify-items-center cursor-pointer " + (containerClassName ? containerClassName : '')} onClick={() => {
+        if(onItemClick) {
+          return onItemClick(item);
+        }
+        setFormUser(() => {
+          setMainActiveTab(1);
+          return item;
+        });
+      }}>
+        {src ? <img className="w-10 h-10 rounded-full" src={src} alt=""/> : randomAvatar(title)}
+        <div className="font-medium text-zinc-900 dark:text-white justify-self-start px-2">
+          <div className="capitalize">{title}</div>
+          <div className="text-sm font-normal text-gray-400 dark:text-gray-400">{subTitle}</div>
+        </div>
+        <ArrowForwardIosIcon className="text-gray-500" style={{fontSize: '18px'}} />
+      </div>
+    )
+  }
 
   return (
     <div className={"pustack-give-gradient-list-item cursor-pointer " + (containerClassName ? containerClassName : '')} onClick={() => {

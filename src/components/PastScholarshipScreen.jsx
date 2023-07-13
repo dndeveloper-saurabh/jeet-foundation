@@ -11,7 +11,7 @@ import {ThemeContext} from "../context/ThemeContext";
 
 const defaultPic = 'https://lh3.googleusercontent.com/a/AGNmyxaNQYQ0bte8Vz4NkpY7FX_oalIkGPue0dfhwbi7=s96-c'
 
-const AntTabs = withStyles({
+export const AntTabs = withStyles({
   root: {
     // borderBottom: '1px solid #e8e8e8',
     width: '100%'
@@ -28,7 +28,7 @@ const AntTabs = withStyles({
   },
 })(Tabs);
 
-const AntTab = withStyles((theme) => ({
+export const AntTab = withStyles((theme) => ({
   root: {
     textTransform: 'none',
     minWidth: 72,
@@ -102,7 +102,7 @@ export default function PastScholarshipScreen({handleBackButton, tabIndex = 0}) 
   };
 
   return (
-    <div className="flex flex-col h-full">
+    <div className="flex flex-col h-full px-4">
       <div className="flex items-center text-zinc-900 dark:text-white mb-3">
         <ArrowBackIos style={{fontSize: '18px'}} className="cursor-pointer" onClick={handleBackButton} />
         <div className="flex-1 ml-2 text-xl flowingText font-bold">Past Scholarships</div>
@@ -128,13 +128,15 @@ export default function PastScholarshipScreen({handleBackButton, tabIndex = 0}) 
           scrolling={"false"}
           ignoreNativeScroll={true}
           disabled={true}
-          style={{height: 'auto'}}
+          style={{height: 'calc(100% - 1rem)'}}
+          slideClassName={'!overflow-auto hide-scrollbar'}
+          slideStyle={{overflow: 'auto !important'}}
         >
           <>
-            {approved.map(item => <UserListItem item={item} containerClassName="mb-2" src={item.profile_url} title={item.first_name + " " + item.last_name} subTitle={getClassName(item.grade)}/>)}
+            {approved.sort((a, b) => b.applied_on - a.applied_on).map(item => <UserListItem item={item} containerClassName="mb-2" src={item.profile_url} title={item.first_name + " " + item.last_name} subTitle={getClassName(item.grade)}/>)}
           </>
           <>
-            {rejected.map(item => <UserListItem item={item} containerClassName="mb-2" src={item.profile_url} title={item.first_name + " " + item.last_name} subTitle={getClassName(item.grade)}/>)}
+            {rejected.sort((a, b) => b.applied_on - a.applied_on).map(item => <UserListItem item={item} containerClassName="mb-2" src={item.profile_url} title={item.first_name + " " + item.last_name} subTitle={getClassName(item.grade)}/>)}
           </>
         </SwipeableViews>
       </div>

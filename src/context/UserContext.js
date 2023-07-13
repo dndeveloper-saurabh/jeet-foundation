@@ -14,6 +14,7 @@ export const UserContextProvider = (props) => {
   const [profileUser, setProfileUser] = useState(null);
   const [formUser, setFormUser] = useState(null);
   const [activeUsers, setActiveUsers] = useState(null);
+  const [onlineUsers, setOnlineUsers] = useState(null);
   const [showDrawer, setShowDrawer] = useState(null);
 
   return (
@@ -28,6 +29,7 @@ export const UserContextProvider = (props) => {
         profileUser: [profileUser, setProfileUser],
         formUser: [formUser, setFormUser],
         activeUsers: [activeUsers, setActiveUsers],
+        onlineUsers: [onlineUsers, setOnlineUsers],
         showDrawer: [showDrawer, setShowDrawer]
       }}
     >

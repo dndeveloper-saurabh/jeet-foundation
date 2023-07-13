@@ -14,7 +14,13 @@ module.exports = {
         },
       ],
     },
-    extend: {},
+    extend: {
+      colors: {
+        blueTheme: {
+          100: '#2196F3'
+        }
+      }
+    },
   },
   plugins: [],
 }
